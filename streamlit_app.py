@@ -220,33 +220,6 @@ with st.sidebar:
         use_container_width=True
     )
 
-# ---- MAIN INPUT AREA ----
-headline = st.text_area(
-    "**Headline**",
-    value=st.session_state.get("headline", ""),
-    placeholder="Enter article headline...",
-    height=80
-)
-
-content = st.text_area(
-    "**Content**",
-    value=st.session_state.get("content", ""),
-    placeholder="Enter article content...",
-    height=250
-)
-
-# ---- CLEAR BUTTON LOGIC ----
-if clear_button:
-    st.session_state["headline"] = ""
-    st.session_state["content"] = ""
-    st.rerun()
-
-# ---- LOAD MODEL ----
-model = load_model()
-
-if model is None:
-    st.stop()
-
 # ---- PREDICTION LOGIC ----
 if predict_button:
     # Check API key
@@ -289,6 +262,32 @@ if predict_button:
                     
         except Exception as e:
             st.error(f"❌ Error during prediction: {e}")
+# ---- MAIN INPUT AREA ----
+headline = st.text_area(
+    "**Headline**",
+    value=st.session_state.get("headline", ""),
+    placeholder="Enter article headline...",
+    height=80
+)
+
+content = st.text_area(
+    "**Content**",
+    value=st.session_state.get("content", ""),
+    placeholder="Enter article content...",
+    height=250
+)
+
+# ---- CLEAR BUTTON LOGIC ----
+if clear_button:
+    st.session_state["headline"] = ""
+    st.session_state["content"] = ""
+    st.rerun()
+
+# ---- LOAD MODEL ----
+model = load_model()
+
+if model is None:
+    st.stop()
 
 # ---- FOOTER ----
 st.divider()
