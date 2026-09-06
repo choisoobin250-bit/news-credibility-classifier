@@ -222,7 +222,7 @@ predict_button = st.button(
         type="primary"
     )
     
-    clear_button = st.button(
+clear_button = st.button(
         "🗑️ Clear Text",
         use_container_width=True
     )
