@@ -152,7 +152,7 @@ st.divider()
 # INSTRUCTIONS
 with st.expander("📖 How to use", expanded=True):
     st.markdown("""
-        <h2 style="color:#000000; margin: 0 0 5px 0; font-size: 18px; font-weight: 600;">✍🏻 Enter your news article!</h2>
+        <h2 style="color:#000000; margin: 0; font-size: 18px; font-weight: 600;">✍🏻 Enter your news article!</h2>
         <p style="color: #333333; margin: 0 0 5px 0; font-size: 14px; line-height: 2.0;">
             <b>1.</b> Type the <b>Headline</b> in the first box below.<br>
             <b>2.</b> Type the <b>Content</b> in the second box below.<br>
