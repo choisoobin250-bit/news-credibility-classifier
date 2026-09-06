@@ -201,8 +201,8 @@ with st.sidebar:
     """
     <style>
     hr {
-        margin-top: 2rem;
-        margin-bottom: 2rem;
+        margin-top: 4rem;
+        margin-bottom: 4rem;
     }
     </style>
     """,
