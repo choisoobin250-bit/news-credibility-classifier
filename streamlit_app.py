@@ -166,11 +166,12 @@ with st.expander("📖 How to use", expanded=True):
 
 # ---- SIDEBAR ----
 with st.sidebar:
-     /* Fix spacing around divider */
+    st.markdown("""
+    <style>
+    /* Fix spacing around divider */
     hr {
         margin-top: 8px !important;
         margin-bottom: 8px !important;
-    }
 
     st.header("📌 Try a Sample Article")
     
