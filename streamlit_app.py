@@ -202,18 +202,17 @@ with st.sidebar:
         ["--- Select ---", "✅ Credible", "❌ Not Credible"]
     )
     
+    # Auto-load or clear based on selection
     if sample_choice == "✅ Credible":
-        sample_key = "credible"
+        st.session_state["headline"] = sample_articles["credible"]["headline"]
+        st.session_state["content"] = sample_articles["credible"]["content"]
     elif sample_choice == "❌ Not Credible":
-        sample_key = "not credible"
-    else:
-        sample_key = None
-    
-    if sample_key and st.button("📋 Load Sample", use_container_width=True):
-        st.session_state["headline"] = sample_articles[sample_key]["headline"]
-        st.session_state["content"] = sample_articles[sample_key]["content"]
-        st.rerun()
-    
+        st.session_state["headline"] = sample_articles["not credible"]["headline"]
+        st.session_state["content"] = sample_articles["not credible"]["content"]
+    else:  # "--- Select ---"
+        st.session_state["headline"] = ""
+        st.session_state["content"] = ""
+
     st.divider()
     
     predict_button = st.button(
