@@ -138,7 +138,7 @@ st.set_page_config(
 st.markdown("""
 <div style="background-color: #ffffff; padding: 10px; border-radius: 8px; border: 2px solid #e0e0e0; text-align: center;">
     <h1 style="color: black; margin: 0; font-size: 50px;">📰</h1>
-    <h1 style="color: black; margin: 2px 0 0 0; font-size: 22px; font-weight: 700;">
+    <h1 style="color: black; margin: 0; font-size: 22px; font-weight: 700;">
         News <span style="color: #0066cc;">Credibility</span> Classifier
     </h1>
     <p style="color: #555555; margin-top: 4px; font-size: 14px;">
@@ -214,8 +214,6 @@ with st.sidebar:
         st.session_state["headline"] = sample_articles[sample_key]["headline"]
         st.session_state["content"] = sample_articles[sample_key]["content"]
         st.rerun()
-        
-    st.divider()
     
     predict_button = st.button(
         "🔍 Predict Credibility",
@@ -227,9 +225,6 @@ with st.sidebar:
         "🗑️ Clear Text",
         use_container_width=True
     )
-    
-    st.divider()
-    st.caption("⚠️ The classifier can make errors. Always double-check with careful reading and judgment.")
 
 # ---- MAIN INPUT AREA ----
 col1, col2 = st.columns([3, 1])
