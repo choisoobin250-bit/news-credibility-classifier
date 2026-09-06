@@ -197,7 +197,7 @@ with st.sidebar:
         st.session_state["headline"] = ""
         st.session_state["content"] = ""
 
-st.markdown(
+    st.markdown(
     """
     <style>
     hr {
