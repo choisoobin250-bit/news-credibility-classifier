@@ -286,7 +286,7 @@ with st.sidebar:
 """, unsafe_allow_html=True)
 
 # 2. Render your HTML element
-st.markdown("""
+    st.markdown("""
 <div class="bottom-caption">
     The classifier can make errors. Always double-check with careful reading and judgment.
 </div>
