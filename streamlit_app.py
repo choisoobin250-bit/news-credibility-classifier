@@ -216,21 +216,18 @@ with st.sidebar:
 
 st.divider()
     
-predict_button = st.button(
+    predict_button = st.button(
         "🔍 Predict Credibility",
         use_container_width=True,
         type="primary"
     )
     
-clear_button = st.button(
+    clear_button = st.button(
         "🗑️ Clear Text",
         use_container_width=True
     )
 
 # ---- MAIN INPUT AREA ----
-col1, col2 = st.columns([3, 1])
-
-with col1:
     headline = st.text_area(
         "**Headline**",
         value=st.session_state.get("headline", ""),
