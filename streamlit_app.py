@@ -168,48 +168,13 @@ with st.sidebar:
     div[data-testid="stVerticalBlock"] > div {
         gap: 4px !important;
     }
-    /* Make sidebar content scrollable and push caption to bottom */
-    .sidebar-content {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-    }
-    .sidebar-bottom {
-        margin-top: auto;
-        padding-top: 20px;
-    }
     .bottom-caption {
         font-size: 10px;
         color: #888888;
         text-align: center;
         padding: 10px 0;
+        margin-top: 20px;
         border-top: 1px solid #dddddd;
-    }
-    /* Style for instructions */
-    .instructions {
-        background-color: #f0f0f0;
-        padding: 15px;
-        border-radius: 8px;
-        border: 1px solid #d0d0d0;
-        margin-bottom: 10px;
-    }
-    .instructions h3 {
-        color: #000000;
-        margin: 0 0 8px 0;
-        font-size: 16px;
-        font-weight: 600;
-    }
-    .instructions p {
-        color: #333333;
-        margin: 0;
-        font-size: 13px;
-        line-height: 1.8;
-    }
-    .instructions .hint {
-        color: #666666;
-        margin-top: 8px;
-        font-size: 12px;
-        font-style: italic;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -223,21 +188,6 @@ with st.sidebar:
         </h1>
         <p style="color: #555555; margin-top: 4px; font-size: 12px;">
             Check if a news article is <u><b>Credible</b> or <b>Not Credible</b></u>
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-
-    # ---- HOW TO USE (Always visible, not a dropdown) ----
-    st.markdown("""
-    <div class="instructions">
-        <h3>✍🏻 How to use</h3>
-        <p>
-            <b>1.</b> Enter the <b>Headline</b> below.<br>
-            <b>2.</b> Enter the <b>Content</b> below.<br>
-            <b>3.</b> Click <b>"🔍 Predict Credibility"</b> to see results.
-        </p>
-        <p class="hint">
-            💡 <i>Try the sample articles in the dropdown below!</i>
         </p>
     </div>
     """, unsafe_allow_html=True)
@@ -293,6 +243,22 @@ with st.sidebar:
         ⚠️ The classifier can make errors. Always double-check with careful reading and judgment.
     </div>
     """, unsafe_allow_html=True)
+
+# ---- MAIN AREA ----
+# INSTRUCTIONS (Always visible, not a dropdown)
+st.markdown("""
+<div style="background-color: #f0f0f0; padding: 20px; border-radius: 10px; border: 1px solid #d0d0d0; margin-bottom: 15px;">
+    <h2 style="color:#000000; margin: 0 0 8px 0; font-size: 18px; font-weight: 600;">✍🏻 Enter your news article!</h2>
+    <p style="color: #333333; margin: 0; font-size: 14px; line-height: 2.0;">
+        <b>1.</b> Type the <b>Headline</b> in the first box below.<br>
+        <b>2.</b> Type the <b>Content</b> in the second box below.<br>
+        <b>3.</b> Click <b>"🔍 Predict Credibility"</b> to see the results in the sidebar.
+    </p>
+    <p style="color: #666666; margin: 10px 0 0 0; font-size: 13px;">
+        💡 <i>Try the sample articles in the sidebar!</i>
+    </p>
+</div>
+""", unsafe_allow_html=True)
 
 # ---- MAIN INPUT AREA ----
 headline = st.text_area(
