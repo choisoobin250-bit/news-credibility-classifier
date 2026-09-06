@@ -236,7 +236,22 @@ with st.sidebar:
     # ---- CREATE A PLACEHOLDER FOR RESULTS IN SIDEBAR ----
     results_placeholder = st.empty()
     
-    st.caption("⚠️ The classifier can make errors. Always double-check with careful reading and judgment.")
+     # Push caption to bottom with CSS
+    st.markdown("""
+    <style>
+    /* Push caption to bottom of sidebar */
+    .stSidebar .stCaption {
+        position: fixed;
+        bottom: 10px;
+        left: 10px;
+        width: calc(100% - 40px);
+        font-size: 10px !important;
+        color: #888888 !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+    
+    st.caption("The classifier can make errors. Always double-check with careful reading and judgment.")
 
 # ---- MAIN INPUT AREA ----
 headline = st.text_area(
