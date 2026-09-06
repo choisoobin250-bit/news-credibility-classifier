@@ -170,20 +170,6 @@ with st.expander("📖 How to use", expanded=True):
 with st.sidebar:
     st.markdown("""
     <style>
-    /* Fix spacing around divider */
-    hr {
-        margin-top: 6px !important;
-        margin-bottom: 6px !important;
-    }
-    /* Reduce space between buttons */
-    .stButton {
-        margin-top: 2px !important;
-        margin-bottom: 2px !important;
-    }
-    /* Reduce vertical block spacing */
-    div[data-testid="stVerticalBlock"] > div {
-        gap: 4px !important;
-    }
     /* Make Predict button blue */
     button[kind="primary"] {
         background-color: #0066cc !important;
