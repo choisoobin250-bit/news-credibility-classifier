@@ -137,7 +137,7 @@ st.set_page_config(
 # TITLE BOX
 st.markdown("""
 <div style="background-color: #ffffff; padding: 10px; border-radius: 8px; border: 2px solid #e0e0e0; text-align: center;">
-    <h1 style="color: black; margin: 0; font-size: 24px;">📰</h1>
+    <h1 style="color: black; margin: 0; font-size: 40px;">📰</h1>
     <h1 style="color: black; margin: 2px 0 0 0; font-size: 22px; font-weight: 700;">
         News <span style="color: #0066cc;">Credibility</span> Classifier
     </h1>
@@ -166,6 +166,12 @@ with st.expander("📖 How to use", expanded=True):
 
 # ---- SIDEBAR ----
 with st.sidebar:
+     /* Fix spacing around divider */
+    hr {
+        margin-top: 8px !important;
+        margin-bottom: 8px !important;
+    }
+
     st.header("📌 Try a Sample Article")
     
     sample_choice = st.selectbox(
