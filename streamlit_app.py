@@ -201,9 +201,17 @@ with st.sidebar:
         st.session_state["headline"] = ""
         st.session_state["content"] = ""
 
-    st.markdown("""
-<hr style="margin-top: 4px; margin-bottom: 8px; border-width: 1px;">
-""", unsafe_allow_html=True)
+    st.markdown(
+    """
+    <style>
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
     
     predict_button = st.button(
         "🔍 Predict Credibility",
