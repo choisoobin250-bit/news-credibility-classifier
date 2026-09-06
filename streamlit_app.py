@@ -236,6 +236,7 @@ with col1:
         value=st.session_state.get("headline", ""),
         placeholder="Enter article headline...",
         height=80
+        width=100
     )
     
     content = st.text_area(
@@ -243,6 +244,7 @@ with col1:
         value=st.session_state.get("content", ""),
         placeholder="Enter article content...",
         height=250
+        width=100
     )
 
 # ---- CLEAR BUTTON LOGIC ----
