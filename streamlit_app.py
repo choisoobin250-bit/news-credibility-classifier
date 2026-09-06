@@ -275,8 +275,6 @@ with st.sidebar:
                         
             except Exception as e:
                 st.error(f"❌ Error during prediction: {e}")
-    
-    st.caption("⚠️ The classifier can make errors. Always double-check with careful reading and judgment.")
 
 # ---- MAIN INPUT AREA ----
 headline = st.text_area(
