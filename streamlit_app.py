@@ -233,31 +233,58 @@ with st.sidebar:
     
     st.divider()
     
-    # ---- PREDICTION LOGIC WITH RESULTS IN SIDEBAR ----
-    if predict_button:
-        # Check API key
-        if not OPENAI_API_KEY:
-            st.error("❌ OpenAI API Key not found! Please add it to Streamlit Secrets.")
-            st.info("Go to your app settings → Secrets → Add `OPENAI_API_KEY`")
-            st.stop()
-        
-        # Validate inputs
-        if not headline.strip() and not content.strip():
-            st.warning("⚠️ Please enter both a headline and content.")
-            st.stop()
-        
-        # Show spinner while processing
-        with st.spinner("🤔 Analyzing article..."):
-            try:
-                result = predict_article(headline, content, OPENAI_API_KEY, model)
+    # ---- CREATE A PLACEHOLDER FOR RESULTS IN SIDEBAR ----
+    results_placeholder = st.empty()
+    
+    st.caption("⚠️ The classifier can make errors. Always double-check with careful reading and judgment.")
+
+# ---- MAIN INPUT AREA ----
+headline = st.text_area(
+    "**Headline**",
+    value=st.session_state.get("headline", ""),
+    placeholder="Enter article headline...",
+    height=80
+)
+
+content = st.text_area(
+    "**Content**",
+    value=st.session_state.get("content", ""),
+    placeholder="Enter article content...",
+    height=250
+)
+
+# ---- CLEAR BUTTON LOGIC ----
+if clear_button:
+    st.session_state["headline"] = ""
+    st.session_state["content"] = ""
+    st.rerun()
+
+# ---- PREDICTION LOGIC ----
+if predict_button:
+    # Check API key
+    if not OPENAI_API_KEY:
+        st.error("❌ OpenAI API Key not found! Please add it to Streamlit Secrets.")
+        st.info("Go to your app settings → Secrets → Add `OPENAI_API_KEY`")
+        st.stop()
+    
+    # Validate inputs
+    if not headline.strip() and not content.strip():
+        st.warning("⚠️ Please enter both a headline and content.")
+        st.stop()
+    
+    # Show spinner while processing
+    with st.spinner("🤔 Analyzing article..."):
+        try:
+            result = predict_article(headline, content, OPENAI_API_KEY, model)
+            
+            if "error" in result:
+                st.error(f"⚠️ Error: {result['error']}")
+            else:
+                label = result["label"]
+                confidence = result["confidence"]
                 
-                if "error" in result:
-                    st.error(f"⚠️ Error: {result['error']}")
-                else:
-                    label = result["label"]
-                    confidence = result["confidence"]
-                    
-                    # Display result with styling in sidebar
+                # Display result in the sidebar placeholder
+                with results_placeholder.container():
                     if label == "Credible":
                         st.markdown(f"""
                         <div style="background-color: #ccffcc; padding: 15px; border-radius: 10px; border: 2px solid #2c2d2d; text-align: center;">
@@ -272,9 +299,9 @@ with st.sidebar:
                             <p style="color: #ffffff; margin-top: 8px; font-size: 16px;">Confidence: {confidence:.2f}%</p>
                         </div>
                         """, unsafe_allow_html=True)
-                        
-            except Exception as e:
-                st.error(f"❌ Error during prediction: {e}")
+                    
+        except Exception as e:
+            st.error(f"❌ Error during prediction: {e}")
 
 # ---- MAIN INPUT AREA ----
 headline = st.text_area(
