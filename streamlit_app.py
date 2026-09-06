@@ -148,6 +148,9 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.divider()
+st.markdown("""
+<hr style="margin-top: 4px; margin-bottom: 4px; border-width: 1px;">
+""", unsafe_allow_html=True)
 
 # INSTRUCTIONS
 with st.expander("📖 How to use", expanded=True):
@@ -214,6 +217,9 @@ with st.sidebar:
         st.session_state["content"] = ""
 
     st.divider()
+    st.markdown("""
+<hr style="margin-top: 4px; margin-bottom: 4px; border-width: 1px;">
+""", unsafe_allow_html=True)
     
     predict_button = st.button(
         "🔍 Predict Credibility",
