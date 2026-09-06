@@ -186,6 +186,10 @@ with st.sidebar:
         st.rerun()
         
     st.divider()
+    hr {
+        margin-top: 8px !important;
+        margin-bottom: 8px !important;
+    }
     
     predict_button = st.button(
         "🔍 Predict Credibility",
