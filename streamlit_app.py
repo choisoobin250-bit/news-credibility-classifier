@@ -238,10 +238,13 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-sample_choice = st.selectbox(
-    "Select an example:",
-    ["--- Select ---", "✅ Credible", "❌ Not Credible"],
-    key="sample_choice"
+col1, col2, col3 = st.columns([1, 2, 1])
+with col2:
+    sample_choice = st.selectbox(
+        "Select an example:",
+        ["--- Select ---", "✅ Credible", "❌ Not Credible"],
+        key="sample_choice"
+    )
 )
 
 # Initialize clear flag if not exists
