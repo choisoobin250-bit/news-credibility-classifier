@@ -190,7 +190,7 @@ with st.sidebar:
     predict_button = st.button(
         "🔍 Predict Credibility",
         use_container_width=True,
-        type="secondary"
+        type="primary"
     )
 
     st.markdown("""
@@ -198,6 +198,7 @@ with st.sidebar:
 /* Target only primary buttons */
 button[kind="primary"] {
     background-color: #0066cc !important;
+    border-color: #0066cc !important;
     color: white !important;
 }
 button[kind="primary"]:hover {
