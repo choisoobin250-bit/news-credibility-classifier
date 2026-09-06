@@ -186,8 +186,8 @@ with st.sidebar:
         st.rerun()
         
     st.divider()
-    with col2:
     
+with col2:
     predict_button = st.button(
         "🔍 Predict Credibility",
         use_container_width=True,
