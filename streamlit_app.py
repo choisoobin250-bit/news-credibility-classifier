@@ -1,19 +1,14 @@
 # NEWS CREDIBILITY CLASSIFIER - Streamlit Version
-# Safe for GitHub deployment - API key stored in Streamlit Secrets
 
 import re
 import numpy as np
+import pandas as pd
 import requests
 import streamlit as st
 from joblib import load
 import os
 
-# ============================================
-# CONFIGURATION - API Key from Streamlit Secrets (SAFE)
-# ============================================
-
-# NEVER hardcode your API key here! 
-# It will be read from Streamlit's secret management system.
+# Getting API Key from Streamlit Secrets
 OPENAI_API_KEY = st.secrets.get("OPENAI_API_KEY", "")
 
 OPENAI_API_URL = "https://api.openai.com/v1/embeddings"
@@ -21,10 +16,7 @@ EMBEDDING_MODEL = "text-embedding-3-large"
 EMBEDDING_DIMENSIONS = 3072
 MODEL_PATH = "news_credibility_classifier.joblib"
 
-# ============================================
 # FUNCTIONS
-# ============================================
-
 def clean_text(text: str) -> str:
     """Clean and preprocess text"""
     if not isinstance(text, str):
@@ -104,10 +96,7 @@ def predict_article(headline: str, content: str, api_key: str, model) -> dict:
         "prediction": int(prediction[0])
     }
 
-# ============================================
 # SAMPLE ARTICLES
-# ============================================
-
 sample_articles = {
     "credible": {
         "headline": "Tropical Depression Luis maintains strength; Dolphin weakens into typhoon outside PAR",
@@ -137,17 +126,14 @@ Sinabi rin ng isang "security expert" na si "Mr. X" (ayaw magbigay ng buong pang
     }
 }
 
-# ============================================
-# STREAMLIT UI
-# ============================================
-
+# USER INTERFACE
+# TITLE
 st.set_page_config(
     page_title="News Credibility Classifier",
     page_icon="📰",
     layout="wide"
 )
 
-# ---- TITLE ----
 st.markdown("""
 <div style="background-color: #ffffff; padding: 20px; border-radius: 10px; border: 2px solid #e0e0e0; text-align: center;">
     <h1 style="color: black; margin: 0; font-size: 32px;">📰</h1>
@@ -162,7 +148,7 @@ st.markdown("""
 
 st.divider()
 
-# ---- INSTRUCTIONS ----
+# INSTRUCTIONS
 with st.expander("📖 How to use", expanded=True):
     st.markdown("""
     <div style="background-color: #f0f0f0; padding: 20px; border-radius: 10px; border: 1px solid #d0d0d0;">
