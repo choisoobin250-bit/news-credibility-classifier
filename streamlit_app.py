@@ -238,7 +238,7 @@ div[data-testid="stSelectbox"] {
     background-color: #ffffff;
     padding: 15px 15px 5px 15px;
     border-radius: 8px;
-    border: 1px solid #000000;
+    border: 1px solid #d0d0d0;
     margin-bottom: 15px;
 }
 div[data-testid="stSelectbox"] label {
