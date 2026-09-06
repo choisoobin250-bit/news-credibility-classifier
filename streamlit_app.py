@@ -216,7 +216,7 @@ with st.sidebar:
 
 st.divider()
     
-    predict_button = st.button(
+predict_button = st.button(
         "🔍 Predict Credibility",
         use_container_width=True,
         type="primary"
