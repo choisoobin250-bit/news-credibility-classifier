@@ -137,7 +137,7 @@ st.set_page_config(
 # TITLE BOX
 st.markdown("""
 <div style="background-color: #ffffff; padding: 10px; border-radius: 8px; border: 2px solid #e0e0e0; text-align: center; margin: 0 0 10px 0">
-    <h1 style="color: black; margin: 0 0 5px 0; font-size: 50px;">📰</h1>
+    <h1 style="color: black; margin-bottom: 0; font-size: 50px;">📰</h1>
     <h1 style="color: black; margin: 0; font-size: 22px; font-weight: 700;">
         News <span style="color: #0066cc;">Credibility</span> Classifier
     </h1>
@@ -151,7 +151,7 @@ st.markdown("""
 with st.expander("📖 How to use", expanded=True):
     st.markdown("""
         <h2 style="color:#000000; margin: 0; font-size: 18px; font-weight: 600;">✍🏻 Enter your news article!</h2>
-        <p style="color: #333333; margin: 0 0 5px 0; font-size: 14px; line-height: 2.0;">
+        <p style="color: #333333; margin: 0; font-size: 14px; line-height: 2.0;">
             <b>1.</b> Type the <b>Headline</b> in the first box below.<br>
             <b>2.</b> Type the <b>Content</b> in the second box below.<br>
             <b>3.</b> Click <b>"🔍 Predict Credibility"</b> to see the results.
