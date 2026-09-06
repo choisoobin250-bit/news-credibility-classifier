@@ -137,7 +137,7 @@ st.set_page_config(
 # TITLE BOX
 st.markdown("""
 <div style="background-color: #ffffff; padding: 10px; border-radius: 8px; border: 2px solid #e0e0e0; text-align: center;">
-    <h1 style="color: black; margin: 0; font-size: 40px;">📰</h1>
+    <h1 style="color: black; margin: 0; font-size: 50px;">📰</h1>
     <h1 style="color: black; margin: 2px 0 0 0; font-size: 22px; font-weight: 700;">
         News <span style="color: #0066cc;">Credibility</span> Classifier
     </h1>
@@ -152,13 +152,14 @@ st.divider()
 # INSTRUCTIONS
 with st.expander("📖 How to use", expanded=True):
     st.markdown("""
+    <div style="background-color: #f0f0f0; padding: 20px; border-radius: 10px; border: 1px solid #d0d0d0;">
         <h2 style="color:#000000; margin: 0 0 5px 0; font-size: 18px; font-weight: 600;">✍🏻 Enter your news article!</h2>
         <p style="color: #333333; margin: 0 0 5px 0; font-size: 14px; line-height: 2.0;">
             <b>1.</b> Type the <b>Headline</b> in the first box below.<br>
             <b>2.</b> Type the <b>Content</b> in the second box below.<br>
             <b>3.</b> Click <b>"🔍 Predict Credibility"</b> to see the results.
         </p>
-        <p style="color: #666666; margin: 10px 0 0 0; font-size: 13px;">
+        <p style="color: #666666; margin: 10px 0 5px 0; font-size: 13px;">
             💡 <i>Try the sample articles in the sidebar!</i>
         </p>
     </div>
@@ -170,9 +171,31 @@ with st.sidebar:
     <style>
     /* Fix spacing around divider */
     hr {
-        margin-top: 8px !important;
-        margin-bottom: 8px !important;
-
+        margin-top: 6px !important;
+        margin-bottom: 6px !important;
+    }
+    /* Reduce space between buttons */
+    .stButton {
+        margin-top: 2px !important;
+        margin-bottom: 2px !important;
+    }
+    /* Reduce vertical block spacing */
+    div[data-testid="stVerticalBlock"] > div {
+        gap: 4px !important;
+    }
+    /* Make Predict button blue */
+    button[kind="primary"] {
+        background-color: #0066cc !important;
+        border-color: #0066cc !important;
+        color: white !important;
+    }
+    button[kind="primary"]:hover {
+        background-color: #004d99 !important;
+        border-color: #004d99 !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+    
     st.header("📌 Try a Sample Article")
     
     sample_choice = st.selectbox(
@@ -199,25 +222,14 @@ with st.sidebar:
         use_container_width=True,
         type="primary"
     )
-
-    st.markdown("""
-<style>
-/* Target only primary buttons */
-button[kind="primary"] {
-    background-color: #0066cc !important;
-    border-color: #0066cc !important;
-    color: white !important;
-}
-button[kind="primary"]:hover {
-    background-color: #004d99 !important;
-}
-</style>
-""", unsafe_allow_html=True)
     
     clear_button = st.button(
         "🗑️ Clear Text",
         use_container_width=True
     )
+    
+    st.divider()
+    st.caption("⚠️ The classifier can make errors. Always double-check with careful reading and judgment.")
 
 # ---- MAIN INPUT AREA ----
 col1, col2 = st.columns([3, 1])
@@ -263,7 +275,7 @@ if predict_button:
         st.stop()
     
     # Show spinner while processing
-    with st.spinner("Analyzing article..."):
+    with st.spinner("🤔 Analyzing article..."):
         try:
             result = predict_article(headline, content, OPENAI_API_KEY, model)
             
