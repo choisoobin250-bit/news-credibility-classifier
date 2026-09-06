@@ -150,17 +150,24 @@ st.markdown("""
 # INSTRUCTIONS
 with st.expander("📖 How to use", expanded=True):
     st.markdown("""
+    <div style="background-color: #f0f0f0; padding: 20px; border-radius: 10px; border: 1px solid #d0d0d0;">
         <h2 style="color:#000000; margin: 0; font-size: 18px; font-weight: 600;">✍🏻 Enter your news article!</h2>
         <p style="color: #333333; margin: 0; font-size: 14px; line-height: 2.0;">
             <b>1.</b> Type the <b>Headline</b> in the first box below.<br>
             <b>2.</b> Type the <b>Content</b> in the second box below.<br>
-            <b>3.</b> Click <b>"🔍 Predict Credibility"</b> to see the results.
+            <b>3.</b> Click <b>"🔍 Predict Credibility"</b> to see the results in the sidebar.
         </p>
         <p style="color: #666666; margin: 10px 0 10px 0; font-size: 13px;">
             💡 <i>Try the sample articles in the sidebar!</i>
         </p>
     </div>
     """, unsafe_allow_html=True)
+
+# ---- LOAD MODEL ----
+model = load_model()
+
+if model is None:
+    st.stop()
 
 # ---- SIDEBAR ----
 with st.sidebar:
@@ -175,6 +182,20 @@ with st.sidebar:
     button[kind="primary"]:hover {
         background-color: #004d99 !important;
         border-color: #004d99 !important;
+    }
+    /* Fix divider spacing */
+    hr {
+        margin-top: 8px !important;
+        margin-bottom: 8px !important;
+    }
+    /* Reduce button spacing */
+    .stButton {
+        margin-top: 2px !important;
+        margin-bottom: 2px !important;
+    }
+    /* Reduce vertical block spacing */
+    div[data-testid="stVerticalBlock"] > div {
+        gap: 4px !important;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -196,18 +217,8 @@ with st.sidebar:
     else:  # "--- Select ---"
         st.session_state["headline"] = ""
         st.session_state["content"] = ""
-
-    st.markdown(
-    """
-    <style>
-    hr {
-        margin-top: 10rem;
-        margin-bottom: 10rem;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
+    
+    st.divider()
     
     predict_button = st.button(
         "🔍 Predict Credibility",
@@ -219,49 +230,54 @@ with st.sidebar:
         "🗑️ Clear Text",
         use_container_width=True
     )
-
-# ---- PREDICTION LOGIC ----
-if predict_button:
-    # Check API key
-    if not OPENAI_API_KEY:
-        st.error("❌ OpenAI API Key not found! Please add it to Streamlit Secrets.")
-        st.info("Go to your app settings → Secrets → Add `OPENAI_API_KEY`")
-        st.stop()
     
-    # Validate inputs
-    if not headline.strip() and not content.strip():
-        st.warning("⚠️ Please enter both a headline and content.")
-        st.stop()
+    st.divider()
     
-    # Show spinner while processing
-    with st.spinner("🤔 Analyzing article..."):
-        try:
-            result = predict_article(headline, content, OPENAI_API_KEY, model)
-            
-            if "error" in result:
-                st.error(f"⚠️ Error: {result['error']}")
-            else:
-                label = result["label"]
-                confidence = result["confidence"]
+    # ---- PREDICTION LOGIC WITH RESULTS IN SIDEBAR ----
+    if predict_button:
+        # Check API key
+        if not OPENAI_API_KEY:
+            st.error("❌ OpenAI API Key not found! Please add it to Streamlit Secrets.")
+            st.info("Go to your app settings → Secrets → Add `OPENAI_API_KEY`")
+            st.stop()
+        
+        # Validate inputs
+        if not headline.strip() and not content.strip():
+            st.warning("⚠️ Please enter both a headline and content.")
+            st.stop()
+        
+        # Show spinner while processing
+        with st.spinner("🤔 Analyzing article..."):
+            try:
+                result = predict_article(headline, content, OPENAI_API_KEY, model)
                 
-                # Display result with styling
-                if label == "Credible":
-                    st.markdown(f"""
-                    <div style="background-color: #ccffcc; padding: 20px; border-radius: 10px; border: 2px solid #2c2d2d; text-align: center;">
-                        <h2 style="color: #306844; margin: 0;">✅ {label}</h2>
-                        <p style="color: #306844; margin-top: 10px; font-size: 18px;">Confidence: {confidence:.2f}%</p>
-                    </div>
-                    """, unsafe_allow_html=True)
+                if "error" in result:
+                    st.error(f"⚠️ Error: {result['error']}")
                 else:
-                    st.markdown(f"""
-                    <div style="background-color: #EE4B2B; padding: 20px; border-radius: 10px; border: 2px solid #2c2d2d; text-align: center;">
-                        <h2 style="color: #ffffff; margin: 0;">❌ {label}</h2>
-                        <p style="color: #ffffff; margin-top: 10px; font-size: 18px;">Confidence: {confidence:.2f}%</p>
-                    </div>
-                    """, unsafe_allow_html=True)
+                    label = result["label"]
+                    confidence = result["confidence"]
                     
-        except Exception as e:
-            st.error(f"❌ Error during prediction: {e}")
+                    # Display result with styling in sidebar
+                    if label == "Credible":
+                        st.markdown(f"""
+                        <div style="background-color: #ccffcc; padding: 15px; border-radius: 10px; border: 2px solid #2c2d2d; text-align: center;">
+                            <h2 style="color: #306844; margin: 0; font-size: 20px;">✅ {label}</h2>
+                            <p style="color: #306844; margin-top: 8px; font-size: 16px;">Confidence: {confidence:.2f}%</p>
+                        </div>
+                        """, unsafe_allow_html=True)
+                    else:
+                        st.markdown(f"""
+                        <div style="background-color: #EE4B2B; padding: 15px; border-radius: 10px; border: 2px solid #2c2d2d; text-align: center;">
+                            <h2 style="color: #ffffff; margin: 0; font-size: 20px;">❌ {label}</h2>
+                            <p style="color: #ffffff; margin-top: 8px; font-size: 16px;">Confidence: {confidence:.2f}%</p>
+                        </div>
+                        """, unsafe_allow_html=True)
+                        
+            except Exception as e:
+                st.error(f"❌ Error during prediction: {e}")
+    
+    st.caption("⚠️ The classifier can make errors. Always double-check with careful reading and judgment.")
+
 # ---- MAIN INPUT AREA ----
 headline = st.text_area(
     "**Headline**",
@@ -282,12 +298,6 @@ if clear_button:
     st.session_state["headline"] = ""
     st.session_state["content"] = ""
     st.rerun()
-
-# ---- LOAD MODEL ----
-model = load_model()
-
-if model is None:
-    st.stop()
 
 # ---- FOOTER ----
 st.divider()
