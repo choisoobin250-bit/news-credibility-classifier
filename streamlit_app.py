@@ -197,6 +197,15 @@ with st.sidebar:
     div[data-testid="stVerticalBlock"] > div {
         gap: 4px !important;
     }
+    /* Push caption to bottom */
+    .bottom-caption {
+        font-size: 10px;
+        color: #888888;
+        text-align: center;
+        padding: 10px 0;
+        margin-top: 20px;
+        border-top: 1px solid #dddddd;
+    }
     </style>
     """, unsafe_allow_html=True)
     
@@ -204,19 +213,26 @@ with st.sidebar:
     
     sample_choice = st.selectbox(
         "Select an example:",
-        ["--- Select ---", "✅ Credible", "❌ Not Credible"]
+        ["--- Select ---", "✅ Credible", "❌ Not Credible"],
+        key="sample_choice"
     )
     
     # Auto-load or clear based on selection
-    if sample_choice == "✅ Credible":
-        st.session_state["headline"] = sample_articles["credible"]["headline"]
-        st.session_state["content"] = sample_articles["credible"]["content"]
-    elif sample_choice == "❌ Not Credible":
-        st.session_state["headline"] = sample_articles["not credible"]["headline"]
-        st.session_state["content"] = sample_articles["not credible"]["content"]
-    else:  # "--- Select ---"
-        st.session_state["headline"] = ""
-        st.session_state["content"] = ""
+    if "clear_pressed" not in st.session_state:
+        st.session_state.clear_pressed = False
+    
+    if not st.session_state.clear_pressed:
+        if sample_choice == "✅ Credible":
+            st.session_state["headline"] = sample_articles["credible"]["headline"]
+            st.session_state["content"] = sample_articles["credible"]["content"]
+        elif sample_choice == "❌ Not Credible":
+            st.session_state["headline"] = sample_articles["not credible"]["headline"]
+            st.session_state["content"] = sample_articles["not credible"]["content"]
+        elif sample_choice == "--- Select ---":
+            st.session_state["headline"] = ""
+            st.session_state["content"] = ""
+    else:
+        st.session_state.clear_pressed = False
     
     st.divider()
     
@@ -236,36 +252,31 @@ with st.sidebar:
     # ---- CREATE A PLACEHOLDER FOR RESULTS IN SIDEBAR ----
     results_placeholder = st.empty()
     
-     # Push caption to bottom with CSS
-    st.markdown("""
-    <style>
-    /* Push caption to bottom of sidebar */
-    .stSidebar .stCaption {
-        position: fixed;
-        bottom: 10px;
-        left: 10px;
-        width: calc(100% - 40px);
-        font-size: 10px !important;
-        color: #888888 !important;
-    }
-    </style>
-    """, unsafe_allow_html=True)
+    # Add spacer to push caption to bottom
+    st.markdown("<div style='height: 40px;'></div>", unsafe_allow_html=True)
     
-    st.caption("The classifier can make errors. Always double-check with careful reading and judgment.")
+    # Caption at bottom with smaller font
+    st.markdown("""
+    <div class="bottom-caption">
+        ⚠️ The classifier can make errors. Always double-check with careful reading and judgment.
+    </div>
+    """, unsafe_allow_html=True)
 
 # ---- MAIN INPUT AREA ----
 headline = st.text_area(
     "**Headline**",
     value=st.session_state.get("headline", ""),
     placeholder="Enter article headline...",
-    height=80
+    height=80,
+    key="headline_input"  # ← UNIQUE KEY
 )
 
 content = st.text_area(
     "**Content**",
     value=st.session_state.get("content", ""),
     placeholder="Enter article content...",
-    height=250
+    height=250,
+    key="content_input"  # ← UNIQUE KEY
 )
 
 # ---- CLEAR BUTTON LOGIC ----
@@ -273,7 +284,6 @@ if clear_button:
     st.session_state["headline"] = ""
     st.session_state["content"] = ""
     st.session_state.clear_pressed = True
-    # Reset the dropdown to "--- Select ---"
     st.session_state.sample_choice = "--- Select ---"
     st.rerun()
 
@@ -320,27 +330,6 @@ if predict_button:
                     
         except Exception as e:
             st.error(f"❌ Error during prediction: {e}")
-
-# ---- MAIN INPUT AREA ----
-headline = st.text_area(
-    "**Headline**",
-    value=st.session_state.get("headline", ""),
-    placeholder="Enter article headline...",
-    height=80
-)
-
-content = st.text_area(
-    "**Content**",
-    value=st.session_state.get("content", ""),
-    placeholder="Enter article content...",
-    height=250
-)
-
-# ---- CLEAR BUTTON LOGIC ----
-if clear_button:
-    st.session_state["headline"] = ""
-    st.session_state["content"] = ""
-    st.rerun()
 
 # ---- FOOTER ----
 st.divider()
