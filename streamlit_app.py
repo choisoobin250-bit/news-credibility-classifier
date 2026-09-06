@@ -184,6 +184,20 @@ with st.sidebar:
         st.session_state["headline"] = sample_articles[sample_key]["headline"]
         st.session_state["content"] = sample_articles[sample_key]["content"]
         st.rerun()
+        
+    st.divider()
+    with col2:
+    
+    predict_button = st.button(
+        "🔍 Predict Credibility",
+        use_container_width=True,
+        type="primary"
+    )
+    
+    clear_button = st.button(
+        "🗑️ Clear Text",
+        use_container_width=True
+    )
     
     st.divider()
     st.caption("⚠️ The classifier can make errors. Always double-check with careful reading and judgment.")
@@ -204,20 +218,6 @@ with col1:
         value=st.session_state.get("content", ""),
         placeholder="Enter article content...",
         height=250
-    )
-
-with col2:
-    st.markdown("### ⚙️ Actions")
-    
-    predict_button = st.button(
-        "🔍 Predict Credibility",
-        use_container_width=True,
-        type="primary"
-    )
-    
-    clear_button = st.button(
-        "🗑️ Clear Text",
-        use_container_width=True
     )
 
 # ---- CLEAR BUTTON LOGIC ----
