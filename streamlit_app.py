@@ -196,18 +196,6 @@ with st.sidebar:
     else:  # "--- Select ---"
         st.session_state["headline"] = ""
         st.session_state["content"] = ""
-
-    st.markdown(
-    """
-    <style>
-    hr {
-        margin-top: 1rem;
-        margin-bottom: 1rem;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
     
     predict_button = st.button(
         "🔍 Predict Credibility",
