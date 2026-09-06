@@ -235,7 +235,7 @@ with col1:
         "**Headline**",
         value=st.session_state.get("headline", ""),
         placeholder="Enter article headline...",
-        height=80
+        height=80,
         width=100
     )
     
@@ -243,7 +243,7 @@ with col1:
         "**Content**",
         value=st.session_state.get("content", ""),
         placeholder="Enter article content...",
-        height=250
+        height=250,
         width=100
     )
 
