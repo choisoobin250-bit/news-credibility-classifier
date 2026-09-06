@@ -220,7 +220,7 @@ with st.sidebar:
 # ---- MAIN AREA ----
 # INSTRUCTIONS (Always visible, not a dropdown)
 st.markdown("""
-<div style="background-color: #f0f0f0; padding: 20px; border-radius: 10px; border: 1px solid #d0d0d0; margin-bottom: 15px;">
+<div style="background-color: #ffffff; padding: 20px; border-radius: 10px; border: 1px solid #d0d0d0; margin-bottom: 15px;">
     <h2 style="color:#000000; margin: 0 0 8px 0; font-size: 18px; font-weight: 600;">✍🏻 Enter your news article!</h2>
     <p style="color: #333333; margin: 0; font-size: 14px; line-height: 2.0;">
         <b>1.</b> Type the <b>Headline</b> in the first box below.<br>
