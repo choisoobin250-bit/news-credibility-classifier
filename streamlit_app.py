@@ -208,7 +208,13 @@ with st.sidebar:
     }
     </style>
     """, unsafe_allow_html=True)
-    
+
+    def clear_text():
+        st.session_state["headline"] = ""
+        st.session_state["content"] = ""
+        st.session_state.sample_choice = "--- Select ---"
+        st.session_state.clear_pressed = True
+        
     st.header("📌 Try a Sample Article")
     
     sample_choice = st.selectbox(
