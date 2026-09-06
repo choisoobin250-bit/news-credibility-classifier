@@ -134,35 +134,6 @@ st.set_page_config(
     layout="wide"
 )
 
-# TITLE BOX
-st.markdown("""
-<div style="background-color: #ffffff; padding: 10px; border-radius: 8px; border: 2px solid #e0e0e0; text-align: center; margin: 0 0 10px 0">
-    <h1 style="color: black; margin-bottom: 0; font-size: 50px;">📰</h1>
-    <h1 style="color: black; margin: 0; font-size: 22px; font-weight: 700;">
-        News <span style="color: #0066cc;">Credibility</span> Classifier
-    </h1>
-    <p style="color: #555555; margin-top: 4px; font-size: 14px;">
-        Enter a news article to check if it's <u><b>Credible</b> or <b>Not Credible</b></u>
-    </p>
-</div>
-""", unsafe_allow_html=True)
-
-# INSTRUCTIONS
-with st.expander("📖 How to use", expanded=True):
-    st.markdown("""
-    <div style="background-color: #f0f0f0; padding: 20px; border-radius: 10px; border: 1px solid #d0d0d0;">
-        <h2 style="color:#000000; margin: 0; font-size: 18px; font-weight: 600;">✍🏻 Enter your news article!</h2>
-        <p style="color: #333333; margin: 0; font-size: 14px; line-height: 2.0;">
-            <b>1.</b> Type the <b>Headline</b> in the first box below.<br>
-            <b>2.</b> Type the <b>Content</b> in the second box below.<br>
-            <b>3.</b> Click <b>"🔍 Predict Credibility"</b> to see the results in the sidebar.
-        </p>
-        <p style="color: #666666; margin: 10px 0 10px 0; font-size: 13px;">
-            💡 <i>Try the sample articles in the sidebar!</i>
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-
 # ---- LOAD MODEL ----
 model = load_model()
 
@@ -214,18 +185,63 @@ with st.sidebar:
         padding: 10px 0;
         border-top: 1px solid #dddddd;
     }
+    /* Style for instructions */
+    .instructions {
+        background-color: #f0f0f0;
+        padding: 15px;
+        border-radius: 8px;
+        border: 1px solid #d0d0d0;
+        margin-bottom: 10px;
+    }
+    .instructions h3 {
+        color: #000000;
+        margin: 0 0 8px 0;
+        font-size: 16px;
+        font-weight: 600;
+    }
+    .instructions p {
+        color: #333333;
+        margin: 0;
+        font-size: 13px;
+        line-height: 1.8;
+    }
+    .instructions .hint {
+        color: #666666;
+        margin-top: 8px;
+        font-size: 12px;
+        font-style: italic;
+    }
     </style>
     """, unsafe_allow_html=True)
 
-    # Define clear function
-    def clear_text():
-        st.session_state["headline"] = ""
-        st.session_state["content"] = ""
-        st.session_state.clear_pressed = True
-        # Clear the results placeholder
-        if "results_placeholder" in st.session_state:
-            st.session_state.results_placeholder.empty()
-    
+    # ---- TITLE IN SIDEBAR ----
+    st.markdown("""
+    <div style="text-align: center; margin-bottom: 15px;">
+        <h1 style="color: black; margin: 0; font-size: 40px;">📰</h1>
+        <h1 style="color: black; margin: 2px 0 0 0; font-size: 20px; font-weight: 700;">
+            News <span style="color: #0066cc;">Credibility</span> Classifier
+        </h1>
+        <p style="color: #555555; margin-top: 4px; font-size: 12px;">
+            Check if a news article is <u><b>Credible</b> or <b>Not Credible</b></u>
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # ---- HOW TO USE (Always visible, not a dropdown) ----
+    st.markdown("""
+    <div class="instructions">
+        <h3>✍🏻 How to use</h3>
+        <p>
+            <b>1.</b> Enter the <b>Headline</b> below.<br>
+            <b>2.</b> Enter the <b>Content</b> below.<br>
+            <b>3.</b> Click <b>"🔍 Predict Credibility"</b> to see results.
+        </p>
+        <p class="hint">
+            💡 <i>Try the sample articles in the dropdown below!</i>
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
     st.header("📌 Try a Sample Article")
     
     sample_choice = st.selectbox(
@@ -268,24 +284,15 @@ with st.sidebar:
     results_placeholder = st.empty()
     st.session_state.results_placeholder = results_placeholder
     
+    # Push caption to bottom
+    st.markdown("<div style='flex-grow: 1;'></div>", unsafe_allow_html=True)
+    
     # Caption at bottom with smaller font
     st.markdown("""
-<style>
-    .bottom-caption {
-        font-size: 12px;          /* Sets the size smaller */
-        color: #666666;           /* Optional: changes text to muted gray */
-        text-align: center;       /* Optional: centers the text */
-        margin-top: 50px;         /* Optional: pushes it down from other elements */
-    }
-</style>
-""", unsafe_allow_html=True)
-
-# 2. Render your HTML element
-    st.markdown("""
-<div class="bottom-caption">
-    The News Credibility classifier can make errors. Always double-check with careful reading and judgment.
-</div>
-""", unsafe_allow_html=True)
+    <div class="bottom-caption">
+        ⚠️ The classifier can make errors. Always double-check with careful reading and judgment.
+    </div>
+    """, unsafe_allow_html=True)
 
 # ---- MAIN INPUT AREA ----
 headline = st.text_area(
