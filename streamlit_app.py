@@ -231,21 +231,43 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ---- SAMPLE ARTICLE DROPDOWN (Gray box, single container) ----
+# ---- SAMPLE ARTICLE DROPDOWN (All in one gray box) ----
+import streamlit as st
+
+# Use markdown with the selectbox embedded
+sample_choice = st.selectbox(
+    "📌 Try a Sample Article",
+    ["--- Select ---", "✅ Credible", "❌ Not Credible"],
+    key="sample_choice"
+)
+
+# Then wrap it with custom styling
 st.markdown("""
-<div style="background-color: #f0f0f0; padding: 15px 15px 5px 15px; border-radius: 8px; border: 1px solid #d0d0d0; margin-bottom: 15px;">
-    <p style="color: #333333; margin: 0 0 5px 0; font-size: 14px; font-weight: 600;">📌 Try a Sample Article</p>
-    <p style="color: #888888; margin: 0 0 10px 0; font-size: 12px;">Select a sample to automatically load it into the fields below</p>
-</div>
+<style>
+/* Target the selectbox container and style it */
+div[data-testid="stSelectbox"] {
+    background-color: #f0f0f0;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #d0d0d0;
+    margin-bottom: 15px;
+}
+/* Style the label inside */
+div[data-testid="stSelectbox"] label {
+    color: #333333 !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+}
+/* Style the description as a caption */
+div[data-testid="stSelectbox"] .stMarkdown {
+    color: #888888;
+    font-size: 12px;
+}
+</style>
 """, unsafe_allow_html=True)
 
-col1, col2, col3 = st.columns([1, 2, 1])
-with col2:
-    sample_choice = st.selectbox(
-        "Select an example:",
-        ["--- Select ---", "✅ Credible", "❌ Not Credible"],
-        key="sample_choice"
-    )
-)
+# Add the subtitle as a caption below the label
+st.caption("Select a sample to automatically load it into the fields below")
 
 # Initialize clear flag if not exists
 if "clear_pressed" not in st.session_state:
