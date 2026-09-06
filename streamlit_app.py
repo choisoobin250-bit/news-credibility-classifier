@@ -147,10 +147,6 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-st.markdown("""
-<hr style="margin-top: 4px; margin-bottom: 4px; border-width: 1px;">
-""", unsafe_allow_html=True)
-
 # INSTRUCTIONS
 with st.expander("📖 How to use", expanded=True):
     st.markdown("""
@@ -160,7 +156,7 @@ with st.expander("📖 How to use", expanded=True):
             <b>2.</b> Type the <b>Content</b> in the second box below.<br>
             <b>3.</b> Click <b>"🔍 Predict Credibility"</b> to see the results.
         </p>
-        <p style="color: #666666; margin: 10px 0 5px 0; font-size: 13px;">
+        <p style="color: #666666; margin: 10px 0 10px 0; font-size: 13px;">
             💡 <i>Try the sample articles in the sidebar!</i>
         </p>
     </div>
