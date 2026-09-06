@@ -230,18 +230,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# ---- SAMPLE ARTICLE DROPDOWN (Gray box, single container) ----
-# ---- SAMPLE ARTICLE DROPDOWN (All in one gray box) ----
-import streamlit as st
-
-# Use markdown with the selectbox embedded
-sample_choice = st.selectbox(
-    "📌 Try a Sample Article",
-    ["--- Select ---", "✅ Credible", "❌ Not Credible"],
-    key="sample_choice"
-)
-
-# Then wrap it with custom styling
+# custom styling
 st.markdown("""
 <style>
 /* Target the selectbox container and style it */
@@ -266,6 +255,13 @@ div[data-testid="stSelectbox"] .stMarkdown {
 </style>
 """, unsafe_allow_html=True)
 
+# Use markdown with the selectbox embedded
+sample_choice = st.selectbox(
+    "📌 Try a Sample Article",
+    ["--- Select ---", "✅ Credible", "❌ Not Credible"],
+    key="sample_choice"
+)
+
 # Initialize clear flag if not exists
 if "clear_pressed" not in st.session_state:
     st.session_state.clear_pressed = False
@@ -279,7 +275,7 @@ elif sample_choice == "❌ Not Credible":
     st.session_state["content"] = sample_articles["not credible"]["content"]
 elif sample_choice == "--- Select ---":
     # Only clear if clear_pressed is not True
-    if not st.session_state.clear_pressed:
+    if not st.session_state.get("clear_pressed", False):
         st.session_state["headline"] = ""
         st.session_state["content"] = ""
 else:
