@@ -230,43 +230,44 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# custom styling
+# ---- SAMPLE ARTICLE DROPDOWN ----
 st.markdown("""
 <style>
-/* Target the selectbox container and style it */
+/* Style the selectbox container to look like a gray box */
 div[data-testid="stSelectbox"] {
-    background-color: #ffffff;
-    padding: 15px;
+    background-color: #f0f0f0;
+    padding: 15px 15px 5px 15px;
     border-radius: 8px;
     border: 1px solid #d0d0d0;
     margin-bottom: 15px;
 }
-/* Style the label inside */
 div[data-testid="stSelectbox"] label {
     color: #333333 !important;
     font-size: 14px !important;
     font-weight: 600 !important;
 }
-/* Style the description as a caption */
-div[data-testid="stSelectbox"] .stMarkdown {
-    color: #888888;
-    font-size: 12px;
-}
 </style>
 """, unsafe_allow_html=True)
 
-# Use markdown with the selectbox embedded
+# Create the selectbox
 sample_choice = st.selectbox(
     "📌 Try a Sample Article",
     ["--- Select ---", "✅ Credible", "❌ Not Credible"],
     key="sample_choice"
 )
 
+# Add subtitle
+st.markdown("""
+<p style="color: #888888; font-size: 12px; margin-top: -10px; margin-bottom: 15px; padding-left: 15px;">
+    Select a sample to automatically load it into the fields below
+</p>
+""", unsafe_allow_html=True)
+
 # Initialize clear flag if not exists
 if "clear_pressed" not in st.session_state:
     st.session_state.clear_pressed = False
 
-# Auto-load or clear based on selection (FIXED: Always load when selection changes)
+# ---- AUTO-LOAD LOGIC (Now AFTER the selectbox) ----
 if sample_choice == "✅ Credible":
     st.session_state["headline"] = sample_articles["credible"]["headline"]
     st.session_state["content"] = sample_articles["credible"]["content"]
@@ -274,13 +275,9 @@ elif sample_choice == "❌ Not Credible":
     st.session_state["headline"] = sample_articles["not credible"]["headline"]
     st.session_state["content"] = sample_articles["not credible"]["content"]
 elif sample_choice == "--- Select ---":
-    # Only clear if clear_pressed is not True
     if not st.session_state.get("clear_pressed", False):
         st.session_state["headline"] = ""
         st.session_state["content"] = ""
-else:
-    # Reset the flag after clearing
-    st.session_state.clear_pressed = False
 
 # ---- MAIN INPUT AREA ----
 headline = st.text_area(
@@ -304,26 +301,21 @@ if clear_button:
     st.session_state["headline"] = ""
     st.session_state["content"] = ""
     st.session_state.clear_pressed = True
-    # Also reset the dropdown to "--- Select ---"
     st.session_state.sample_choice = "--- Select ---"
-    # Clear the results
     results_placeholder.empty()
     st.rerun()
 
 # ---- PREDICTION LOGIC ----
 if predict_button:
-    # Check API key
     if not OPENAI_API_KEY:
         st.error("❌ OpenAI API Key not found! Please add it to Streamlit Secrets.")
         st.info("Go to your app settings → Secrets → Add `OPENAI_API_KEY`")
         st.stop()
     
-    # Validate inputs
     if not headline.strip() and not content.strip():
         st.warning("⚠️ Please enter both a headline and content.")
         st.stop()
     
-    # Show spinner while processing
     with st.spinner("Analyzing article..."):
         try:
             result = predict_article(headline, content, OPENAI_API_KEY, model)
@@ -334,10 +326,8 @@ if predict_button:
                 label = result["label"]
                 confidence = result["confidence"]
                 
-                # Clear any previous results first
                 results_placeholder.empty()
                 
-                # Display result in the sidebar placeholder
                 with results_placeholder.container():
                     if label == "Credible":
                         st.markdown(f"""
