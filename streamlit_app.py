@@ -257,6 +257,9 @@ content = st.text_area(
 if clear_button:
     st.session_state["headline"] = ""
     st.session_state["content"] = ""
+    st.session_state.clear_pressed = True
+    # Reset the dropdown to "--- Select ---"
+    st.session_state.sample_choice = "--- Select ---"
     st.rerun()
 
 # ---- PREDICTION LOGIC ----
