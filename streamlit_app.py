@@ -268,9 +268,6 @@ with st.sidebar:
     results_placeholder = st.empty()
     st.session_state.results_placeholder = results_placeholder
     
-    # Add spacer to push caption to bottom
-    st.markdown("<div style='flex-grow: 1;'></div>", unsafe_allow_html=True)
-    
     # Caption at bottom with smaller font
     st.markdown("""
 <style>
