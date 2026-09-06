@@ -213,8 +213,8 @@ with st.sidebar:
         st.session_state["headline"] = sample_articles[sample_key]["headline"]
         st.session_state["content"] = sample_articles[sample_key]["content"]
         st.rerun()
-
-st.divider()
+    
+    st.divider()
     
     predict_button = st.button(
         "🔍 Predict Credibility",
@@ -228,19 +228,19 @@ st.divider()
     )
 
 # ---- MAIN INPUT AREA ----
-    headline = st.text_area(
-        "**Headline**",
-        value=st.session_state.get("headline", ""),
-        placeholder="Enter article headline...",
-        height=80
-    )
-    
-    content = st.text_area(
-        "**Content**",
-        value=st.session_state.get("content", ""),
-        placeholder="Enter article content...",
-        height=250
-    )
+headline = st.text_area(
+    "**Headline**",
+    value=st.session_state.get("headline", ""),
+    placeholder="Enter article headline...",
+    height=80
+)
+
+content = st.text_area(
+    "**Content**",
+    value=st.session_state.get("content", ""),
+    placeholder="Enter article content...",
+    height=250
+)
 
 # ---- CLEAR BUTTON LOGIC ----
 if clear_button:
