@@ -266,8 +266,6 @@ with st.sidebar:
         use_container_width=True
     )
     
-    st.divider()
-    
     # ---- CREATE A PLACEHOLDER FOR RESULTS IN SIDEBAR ----
     results_placeholder = st.empty()
     st.session_state.results_placeholder = results_placeholder
@@ -277,10 +275,22 @@ with st.sidebar:
     
     # Caption at bottom with smaller font
     st.markdown("""
-    <div class="bottom-caption">
-        ⚠️ The classifier can make errors. Always double-check with careful reading and judgment.
-    </div>
-    """, unsafe_allow_html=True)
+<style>
+    .bottom-caption {
+        font-size: 14px;          /* Sets the size smaller */
+        color: #666666;           /* Optional: changes text to muted gray */
+        text-align: center;       /* Optional: centers the text */
+        margin-top: 50px;         /* Optional: pushes it down from other elements */
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# 2. Render your HTML element
+st.markdown("""
+<div class="bottom-caption">
+    The classifier can make errors. Always double-check with careful reading and judgment.
+</div>
+""", unsafe_allow_html=True)
 
 # ---- MAIN INPUT AREA ----
 headline = st.text_area(
