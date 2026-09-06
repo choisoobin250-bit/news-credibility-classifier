@@ -253,8 +253,6 @@ with st.sidebar:
         # Reset the flag after clearing
         st.session_state.clear_pressed = False
     
-    st.divider()
-    
     predict_button = st.button(
         "🔍 Predict Credibility",
         use_container_width=True,
@@ -277,7 +275,7 @@ with st.sidebar:
     st.markdown("""
 <style>
     .bottom-caption {
-        font-size: 14px;          /* Sets the size smaller */
+        font-size: 12px;          /* Sets the size smaller */
         color: #666666;           /* Optional: changes text to muted gray */
         text-align: center;       /* Optional: centers the text */
         margin-top: 50px;         /* Optional: pushes it down from other elements */
@@ -288,7 +286,7 @@ with st.sidebar:
 # 2. Render your HTML element
     st.markdown("""
 <div class="bottom-caption">
-    The classifier can make errors. Always double-check with careful reading and judgment.
+    The News Credibility classifier can make errors. Always double-check with careful reading and judgment.
 </div>
 """, unsafe_allow_html=True)
 
