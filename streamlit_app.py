@@ -246,7 +246,7 @@ st.markdown("""
 <style>
 /* Target the selectbox container and style it */
 div[data-testid="stSelectbox"] {
-    background-color: #f0f0f0;
+    background-color: #ffffff;
     padding: 15px;
     border-radius: 8px;
     border: 1px solid #d0d0d0;
@@ -265,9 +265,6 @@ div[data-testid="stSelectbox"] .stMarkdown {
 }
 </style>
 """, unsafe_allow_html=True)
-
-# Add the subtitle as a caption below the label
-st.caption("Select a sample to automatically load it into the fields below")
 
 # Initialize clear flag if not exists
 if "clear_pressed" not in st.session_state:
