@@ -191,33 +191,6 @@ with st.sidebar:
         </p>
     </div>
     """, unsafe_allow_html=True)
-
-    st.header("📌 Try a Sample Article")
-    
-    sample_choice = st.selectbox(
-        "Select an example:",
-        ["--- Select ---", "✅ Credible", "❌ Not Credible"],
-        key="sample_choice"
-    )
-    
-    # Initialize clear flag if not exists
-    if "clear_pressed" not in st.session_state:
-        st.session_state.clear_pressed = False
-    
-    # Auto-load or clear based on selection
-    if not st.session_state.clear_pressed:
-        if sample_choice == "✅ Credible":
-            st.session_state["headline"] = sample_articles["credible"]["headline"]
-            st.session_state["content"] = sample_articles["credible"]["content"]
-        elif sample_choice == "❌ Not Credible":
-            st.session_state["headline"] = sample_articles["not credible"]["headline"]
-            st.session_state["content"] = sample_articles["not credible"]["content"]
-        elif sample_choice == "--- Select ---":
-            st.session_state["headline"] = ""
-            st.session_state["content"] = ""
-    else:
-        # Reset the flag after clearing
-        st.session_state.clear_pressed = False
     
     predict_button = st.button(
         "🔍 Predict Credibility",
@@ -254,11 +227,41 @@ st.markdown("""
         <b>2.</b> Type the <b>Content</b> in the second box below.<br>
         <b>3.</b> Click <b>"🔍 Predict Credibility"</b> to see the results in the sidebar.
     </p>
-    <p style="color: #666666; margin: 10px 0 0 0; font-size: 13px;">
-        💡 <i>Try the sample articles in the sidebar!</i>
-    </p>
 </div>
 """, unsafe_allow_html=True)
+
+# ---- SAMPLE ARTICLE DROPDOWN (Now in Main Area) ----
+st.markdown("""
+<div style="background-color: #e8f4fd; padding: 15px; border-radius: 8px; border: 1px solid #b8d4e8; margin-bottom: 15px;">
+    <p style="color: #0066cc; margin: 0; font-size: 14px; font-weight: 600;">📌 Try a Sample Article</p>
+    <p style="color: #555555; margin: 4px 0 0 0; font-size: 12px;">Select a sample to automatically load it into the fields below</p>
+</div>
+""", unsafe_allow_html=True)
+
+sample_choice = st.selectbox(
+    "Select an example:",
+    ["--- Select ---", "✅ Credible", "❌ Not Credible"],
+    key="sample_choice"
+)
+
+# Initialize clear flag if not exists
+if "clear_pressed" not in st.session_state:
+    st.session_state.clear_pressed = False
+
+# Auto-load or clear based on selection
+if not st.session_state.clear_pressed:
+    if sample_choice == "✅ Credible":
+        st.session_state["headline"] = sample_articles["credible"]["headline"]
+        st.session_state["content"] = sample_articles["credible"]["content"]
+    elif sample_choice == "❌ Not Credible":
+        st.session_state["headline"] = sample_articles["not credible"]["headline"]
+        st.session_state["content"] = sample_articles["not credible"]["content"]
+    elif sample_choice == "--- Select ---":
+        st.session_state["headline"] = ""
+        st.session_state["content"] = ""
+else:
+    # Reset the flag after clearing
+    st.session_state.clear_pressed = False
 
 # ---- MAIN INPUT AREA ----
 headline = st.text_area(
