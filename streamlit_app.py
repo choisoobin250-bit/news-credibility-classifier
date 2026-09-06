@@ -150,6 +150,7 @@ st.markdown("""
 # INSTRUCTIONS
 with st.expander("📖 How to use", expanded=True):
     st.markdown("""
+    <div style="background-color: #f0f0f0; padding: 20px; border-radius: 10px; border: 1px solid #d0d0d0;">
         <h2 style="color:#000000; margin: 0; font-size: 18px; font-weight: 600;">✍🏻 Enter your news article!</h2>
         <p style="color: #333333; margin: 0; font-size: 14px; line-height: 2.0;">
             <b>1.</b> Type the <b>Headline</b> in the first box below.<br>
@@ -196,24 +197,35 @@ with st.sidebar:
     div[data-testid="stVerticalBlock"] > div {
         gap: 4px !important;
     }
-    /* Push caption to bottom */
+    /* Make sidebar content scrollable and push caption to bottom */
+    .sidebar-content {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+    .sidebar-bottom {
+        margin-top: auto;
+        padding-top: 20px;
+    }
     .bottom-caption {
         font-size: 10px;
         color: #888888;
         text-align: center;
         padding: 10px 0;
-        margin-top: 20px;
         border-top: 1px solid #dddddd;
     }
     </style>
     """, unsafe_allow_html=True)
 
+    # Define clear function
     def clear_text():
         st.session_state["headline"] = ""
         st.session_state["content"] = ""
-        st.session_state.sample_choice = "--- Select ---"
         st.session_state.clear_pressed = True
-        
+        # Clear the results placeholder
+        if "results_placeholder" in st.session_state:
+            st.session_state.results_placeholder.empty()
+    
     st.header("📌 Try a Sample Article")
     
     sample_choice = st.selectbox(
@@ -222,10 +234,11 @@ with st.sidebar:
         key="sample_choice"
     )
     
-    # Auto-load or clear based on selection
+    # Initialize clear flag if not exists
     if "clear_pressed" not in st.session_state:
         st.session_state.clear_pressed = False
     
+    # Auto-load or clear based on selection
     if not st.session_state.clear_pressed:
         if sample_choice == "✅ Credible":
             st.session_state["headline"] = sample_articles["credible"]["headline"]
@@ -237,6 +250,7 @@ with st.sidebar:
             st.session_state["headline"] = ""
             st.session_state["content"] = ""
     else:
+        # Reset the flag after clearing
         st.session_state.clear_pressed = False
     
     st.divider()
@@ -255,14 +269,16 @@ with st.sidebar:
     st.divider()
     
     # ---- CREATE A PLACEHOLDER FOR RESULTS IN SIDEBAR ----
+    results_placeholder = st.empty()
+    st.session_state.results_placeholder = results_placeholder
     
     # Add spacer to push caption to bottom
-    st.markdown("<div style='height: 40px;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='flex-grow: 1;'></div>", unsafe_allow_html=True)
     
     # Caption at bottom with smaller font
     st.markdown("""
     <div class="bottom-caption">
-        The classifier can make errors. Always double-check with careful reading and judgment.
+        ⚠️ The classifier can make errors. Always double-check with careful reading and judgment.
     </div>
     """, unsafe_allow_html=True)
 
@@ -272,7 +288,7 @@ headline = st.text_area(
     value=st.session_state.get("headline", ""),
     placeholder="Enter article headline...",
     height=80,
-    key="headline_input"  # ← UNIQUE KEY
+    key="headline_input"
 )
 
 content = st.text_area(
@@ -280,7 +296,7 @@ content = st.text_area(
     value=st.session_state.get("content", ""),
     placeholder="Enter article content...",
     height=250,
-    key="content_input"  # ← UNIQUE KEY
+    key="content_input"
 )
 
 # ---- CLEAR BUTTON LOGIC ----
@@ -288,7 +304,8 @@ if clear_button:
     st.session_state["headline"] = ""
     st.session_state["content"] = ""
     st.session_state.clear_pressed = True
-    st.session_state.sample_choice = "--- Select ---"
+    # Clear the results
+    results_placeholder.empty()
     st.rerun()
 
 # ---- PREDICTION LOGIC ----
@@ -314,6 +331,9 @@ if predict_button:
             else:
                 label = result["label"]
                 confidence = result["confidence"]
+                
+                # Clear any previous results first
+                results_placeholder.empty()
                 
                 # Display result in the sidebar placeholder
                 with results_placeholder.container():
