@@ -134,13 +134,14 @@ st.set_page_config(
     layout="wide"
 )
 
+# TITLE BOX
 st.markdown("""
-<div style="background-color: #ffffff; padding: 20px; border-radius: 10px; border: 2px solid #e0e0e0; text-align: center;">
-    <h1 style="color: black; margin: 0; font-size: 32px;">📰</h1>
-    <h1 style="color: black; margin: 5px 0 0 0; font-size: 28px; font-weight: 700;">
+<div style="background-color: #ffffff; padding: 10px; border-radius: 8px; border: 2px solid #e0e0e0; text-align: center;">
+    <h1 style="color: black; margin: 0; font-size: 24px;">📰</h1>
+    <h1 style="color: black; margin: 2px 0 0 0; font-size: 22px; font-weight: 700;">
         News <span style="color: #0066cc;">Credibility</span> Classifier
     </h1>
-    <p style="color: #555555; margin-top: 8px; font-size: 13px;">
+    <p style="color: #555555; margin-top: 4px; font-size: 12px;">
         Enter a news article to check if it's <u><b>Credible</b> or <b>Not Credible</b></u>
     </p>
 </div>
@@ -186,10 +187,7 @@ with st.sidebar:
         st.rerun()
         
     st.divider()
-
-with col2:
-    st.markdown(" ") 
-
+    
     predict_button = st.button(
         "🔍 Predict Credibility",
         use_container_width=True,
@@ -200,9 +198,6 @@ with col2:
         "🗑️ Clear Text",
         use_container_width=True
     )
-    
-    st.divider()
-    st.caption("⚠️ The classifier can make errors. Always double-check with careful reading and judgment.")
 
 # ---- MAIN INPUT AREA ----
 col1, col2 = st.columns([3, 1])
