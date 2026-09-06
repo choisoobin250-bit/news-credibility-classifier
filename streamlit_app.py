@@ -192,6 +192,19 @@ with st.sidebar:
         use_container_width=True,
         type="primary"
     )
+
+    st.markdown("""
+<style>
+/* Target only primary buttons */
+button[kind="primary"] {
+    background-color: #0066cc !important;
+    color: white !important;
+}
+button[kind="primary"]:hover {
+    background-color: #004d99 !important;
+}
+</style>
+""", unsafe_allow_html=True)
     
     clear_button = st.button(
         "🗑️ Clear Text",
