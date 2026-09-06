@@ -147,7 +147,6 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-st.divider()
 st.markdown("""
 <hr style="margin-top: 4px; margin-bottom: 4px; border-width: 1px;">
 """, unsafe_allow_html=True)
@@ -216,7 +215,6 @@ with st.sidebar:
         st.session_state["headline"] = ""
         st.session_state["content"] = ""
 
-    st.divider()
     st.markdown("""
 <hr style="margin-top: 4px; margin-bottom: 4px; border-width: 1px;">
 """, unsafe_allow_html=True)
