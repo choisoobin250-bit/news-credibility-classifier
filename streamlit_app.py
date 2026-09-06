@@ -169,7 +169,7 @@ with st.sidebar:
         gap: 4px !important;
     }
     .bottom-caption {
-        font-size: 10px;
+        font-size: 13px;
         color: #888888;
         text-align: center;
         padding: 10px 0;
