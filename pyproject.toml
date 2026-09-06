@@ -21,4 +21,4 @@ build-backend = "setuptools.build_meta"
 package = false
 
 [tool.streamlit]
-python_version = "3.10"
+python_version = "3.14"
