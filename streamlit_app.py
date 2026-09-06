@@ -235,7 +235,7 @@ st.markdown("""
 <style>
 /* Style the selectbox container to look like a gray box */
 div[data-testid="stSelectbox"] {
-    background-color: #f0f0f0;
+    background-color: #ffffff;
     padding: 15px 15px 5px 15px;
     border-radius: 8px;
     border: 1px solid #d0d0d0;
