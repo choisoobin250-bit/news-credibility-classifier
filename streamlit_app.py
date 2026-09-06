@@ -152,7 +152,6 @@ st.divider()
 # INSTRUCTIONS
 with st.expander("📖 How to use", expanded=True):
     st.markdown("""
-    <div style="background-color: #f0f0f0; padding: 20px; border-radius: 10px; border: 1px solid #d0d0d0;">
         <h2 style="color:#000000; margin: 0 0 5px 0; font-size: 18px; font-weight: 600;">✍🏻 Enter your news article!</h2>
         <p style="color: #333333; margin: 0 0 5px 0; font-size: 14px; line-height: 2.0;">
             <b>1.</b> Type the <b>Headline</b> in the first box below.<br>
@@ -214,6 +213,8 @@ with st.sidebar:
         st.session_state["headline"] = sample_articles[sample_key]["headline"]
         st.session_state["content"] = sample_articles[sample_key]["content"]
         st.rerun()
+
+st.divider()
     
     predict_button = st.button(
         "🔍 Predict Credibility",
