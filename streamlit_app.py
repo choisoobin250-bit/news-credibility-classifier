@@ -150,7 +150,6 @@ st.markdown("""
 # INSTRUCTIONS
 with st.expander("📖 How to use", expanded=True):
     st.markdown("""
-    <div style="background-color: #f0f0f0; padding: 20px; border-radius: 10px; border: 1px solid #d0d0d0;">
         <h2 style="color:#000000; margin: 0; font-size: 18px; font-weight: 600;">✍🏻 Enter your news article!</h2>
         <p style="color: #333333; margin: 0; font-size: 14px; line-height: 2.0;">
             <b>1.</b> Type the <b>Headline</b> in the first box below.<br>
@@ -256,7 +255,6 @@ with st.sidebar:
     st.divider()
     
     # ---- CREATE A PLACEHOLDER FOR RESULTS IN SIDEBAR ----
-    results_placeholder = st.empty()
     
     # Add spacer to push caption to bottom
     st.markdown("<div style='height: 40px;'></div>", unsafe_allow_html=True)
@@ -264,7 +262,7 @@ with st.sidebar:
     # Caption at bottom with smaller font
     st.markdown("""
     <div class="bottom-caption">
-        ⚠️ The classifier can make errors. Always double-check with careful reading and judgment.
+        The classifier can make errors. Always double-check with careful reading and judgment.
     </div>
     """, unsafe_allow_html=True)
 
