@@ -120,7 +120,7 @@ Ayon sa isang "highly placed insider" na malapit sa kampo ng Bise Presidente, an
 
 Hindi pa rin mabatid kung saang bansa patungo si VP Sara, pero ayon sa ilang netizens na nag-viral na post, ang Switzerland daw o kaya Canada ang kanyang destinasyon dahil may "malaking bank account" umano ang pamilya Duterte doon.
 
-Samantala, mariing kinondena ng ilang militanteng grupo ang diumano'y pagtakas ni VP Sara, at tinawag itong "pagkakanulo sa mamamayang Pilipino." Wala namang opisyal na pahayag mula sa opisina ng Bise Presidente patungkol sa isyung ito, pero patuloy ang pagkalat ng balita sa Facebook at TikTok na may mahigit 50,000 shares sa loob lamang ng dalawang oras.
+Samantala, mariing kinondena ng ilang militanteng grupo ang diumano'y pagtakas ni VP Sara, at tinawag itong "pagkakanulo sa mamamayang Pilipino." Wala namang opisyal na pahayag mula sa opisina ng Bise Presidente patungkol sa isyung ito, pero patuloy ang pagkalat ng balita sa Facebook at TikTok na mahigit 50,000 shares sa loob lamang ng dalawang oras.
 
 Sinabi rin ng isang "security expert" na si "Mr. X" (ayaw magbigay ng buong pangalan), na posibleng ginagamit ng mga nasa paligid ni VP Sara ang "backdoor route" sa NAIA upang maiwasan ang media coverage."""
     }
@@ -213,7 +213,7 @@ with st.sidebar:
     # Caption at bottom with smaller font
     st.markdown("""
     <div class="bottom-caption">
-        ⚠️ The classifier can make errors. Always double-check with careful reading and judgment.
+        The classifier can make errors. Always double-check with careful reading and judgment.
     </div>
     """, unsafe_allow_html=True)
 
@@ -230,11 +230,11 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# ---- SAMPLE ARTICLE DROPDOWN (Now in Main Area) ----
+# ---- SAMPLE ARTICLE DROPDOWN (Gray box, single container) ----
 st.markdown("""
-<div style="background-color: #e8f4fd; padding: 15px; border-radius: 8px; border: 1px solid #b8d4e8; margin-bottom: 15px;">
-    <p style="color: #0066cc; margin: 0; font-size: 14px; font-weight: 600;">📌 Try a Sample Article</p>
-    <p style="color: #555555; margin: 4px 0 0 0; font-size: 12px;">Select a sample to automatically load it into the fields below</p>
+<div style="background-color: #f0f0f0; padding: 15px 15px 5px 15px; border-radius: 8px; border: 1px solid #d0d0d0; margin-bottom: 15px;">
+    <p style="color: #333333; margin: 0 0 5px 0; font-size: 14px; font-weight: 600;">📌 Try a Sample Article</p>
+    <p style="color: #888888; margin: 0 0 10px 0; font-size: 12px;">Select a sample to automatically load it into the fields below</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -248,15 +248,16 @@ sample_choice = st.selectbox(
 if "clear_pressed" not in st.session_state:
     st.session_state.clear_pressed = False
 
-# Auto-load or clear based on selection
-if not st.session_state.clear_pressed:
-    if sample_choice == "✅ Credible":
-        st.session_state["headline"] = sample_articles["credible"]["headline"]
-        st.session_state["content"] = sample_articles["credible"]["content"]
-    elif sample_choice == "❌ Not Credible":
-        st.session_state["headline"] = sample_articles["not credible"]["headline"]
-        st.session_state["content"] = sample_articles["not credible"]["content"]
-    elif sample_choice == "--- Select ---":
+# Auto-load or clear based on selection (FIXED: Always load when selection changes)
+if sample_choice == "✅ Credible":
+    st.session_state["headline"] = sample_articles["credible"]["headline"]
+    st.session_state["content"] = sample_articles["credible"]["content"]
+elif sample_choice == "❌ Not Credible":
+    st.session_state["headline"] = sample_articles["not credible"]["headline"]
+    st.session_state["content"] = sample_articles["not credible"]["content"]
+elif sample_choice == "--- Select ---":
+    # Only clear if clear_pressed is not True
+    if not st.session_state.clear_pressed:
         st.session_state["headline"] = ""
         st.session_state["content"] = ""
 else:
@@ -285,6 +286,8 @@ if clear_button:
     st.session_state["headline"] = ""
     st.session_state["content"] = ""
     st.session_state.clear_pressed = True
+    # Also reset the dropdown to "--- Select ---"
+    st.session_state.sample_choice = "--- Select ---"
     # Clear the results
     results_placeholder.empty()
     st.rerun()
@@ -303,7 +306,7 @@ if predict_button:
         st.stop()
     
     # Show spinner while processing
-    with st.spinner("🤔 Analyzing article..."):
+    with st.spinner("Analyzing article..."):
         try:
             result = predict_article(headline, content, OPENAI_API_KEY, model)
             
