@@ -141,7 +141,7 @@ st.markdown("""
     <h1 style="color: black; margin: 2px 0 0 0; font-size: 22px; font-weight: 700;">
         News <span style="color: #0066cc;">Credibility</span> Classifier
     </h1>
-    <p style="color: #555555; margin-top: 4px; font-size: 12px;">
+    <p style="color: #555555; margin-top: 4px; font-size: 14px;">
         Enter a news article to check if it's <u><b>Credible</b> or <b>Not Credible</b></u>
     </p>
 </div>
@@ -152,8 +152,8 @@ st.divider()
 # INSTRUCTIONS
 with st.expander("📖 How to use", expanded=True):
     st.markdown("""
-        <h2 style="color:#000000; margin: 0 0 15px 0; font-size: 18px; font-weight: 600;">✍🏻 Enter your news article!</h2>
-        <p style="color: #333333; margin: 8px 0; font-size: 14px; line-height: 2.0;">
+        <h2 style="color:#000000; margin: 0 0 5px 0; font-size: 18px; font-weight: 600;">✍🏻 Enter your news article!</h2>
+        <p style="color: #333333; margin: 0 0 5px 0; font-size: 14px; line-height: 2.0;">
             <b>1.</b> Type the <b>Headline</b> in the first box below.<br>
             <b>2.</b> Type the <b>Content</b> in the second box below.<br>
             <b>3.</b> Click <b>"🔍 Predict Credibility"</b> to see the results.
@@ -186,10 +186,6 @@ with st.sidebar:
         st.rerun()
         
     st.divider()
-    hr {
-        margin-top: 8px !important;
-        margin-bottom: 8px !important;
-    }
     
     predict_button = st.button(
         "🔍 Predict Credibility",
@@ -260,7 +256,7 @@ if predict_button:
         st.stop()
     
     # Show spinner while processing
-    with st.spinner("🤔 Analyzing article..."):
+    with st.spinner("Analyzing article..."):
         try:
             result = predict_article(headline, content, OPENAI_API_KEY, model)
             
