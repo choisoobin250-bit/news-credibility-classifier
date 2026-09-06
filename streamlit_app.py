@@ -238,7 +238,7 @@ div[data-testid="stSelectbox"] {
     background-color: #ffffff;
     padding: 15px 15px 5px 15px;
     border-radius: 8px;
-    border: 1px solid #d0d0d0;
+    border: 1px solid #000000;
     margin-bottom: 15px;
 }
 div[data-testid="stSelectbox"] label {
@@ -255,13 +255,6 @@ sample_choice = st.selectbox(
     ["--- Select ---", "✅ Credible", "❌ Not Credible"],
     key="sample_choice"
 )
-
-# Add subtitle
-st.markdown("""
-<p style="color: #888888; font-size: 12px; margin-top: -10px; margin-bottom: 15px; padding-left: 15px;">
-    Select a sample to automatically load it into the fields below
-</p>
-""", unsafe_allow_html=True)
 
 # Initialize clear flag if not exists
 if "clear_pressed" not in st.session_state:
