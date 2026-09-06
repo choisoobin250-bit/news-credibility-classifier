@@ -190,7 +190,7 @@ with st.sidebar:
     predict_button = st.button(
         "🔍 Predict Credibility",
         use_container_width=True,
-        type="secondary"
+        type="primary"
     )
     
     clear_button = st.button(
