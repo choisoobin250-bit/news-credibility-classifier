@@ -317,14 +317,14 @@ if predict_button:
             with results_placeholder.container():
                 if label == "Credible":
                     st.markdown(f"""
-                    <div style="background-color: #006400; padding: 15px; border-radius: 10px; border: 2px solid #2c2d2d; text-align: center;">
+                    <div style="background-color: #006400; padding: 15px; border-radius: 10px; border: 1px solid #006400; text-align: center;">
                         <h2 style="color: #ffffff; margin: 0; font-size: 20px;">✅ {label}</h2>
                         <p style="color: #ffffff; margin-top: 8px; font-size: 16px;">Confidence: {confidence:.2f}%</p>
                     </div>
                     """, unsafe_allow_html=True)
                 else:
                     st.markdown(f"""
-                    <div style="background-color: #8B0000; padding: 15px; border-radius: 10px; border: 2px solid #2c2d2d; text-align: center;">
+                    <div style="background-color: #8B0000; padding: 15px; border-radius: 10px; border: 1px solid #8B0000; text-align: center;">
                         <h2 style="color: #ffffff; margin: 0; font-size: 20px;">❌ {label}</h2>
                         <p style="color: #ffffff; margin-top: 8px; font-size: 16px;">Confidence: {confidence:.2f}%</p>
                     </div>
