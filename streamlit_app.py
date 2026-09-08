@@ -133,6 +133,12 @@ Sinabi rin ng isang "security expert" na si "Mr. X" (ayaw magbigay ng buong pang
     }
 }
 
+# Callback for clearing input fields cleanly
+def on_clear_click():
+    st.session_state.headline_input = ""
+    st.session_state.content_input = ""
+    st.session_state.sample_choice = "--- Select ---"
+
 # NEWS CREDIBILITY CLASSIFIER INTERFACE
 # Sidebar
 with st.sidebar:
@@ -179,15 +185,15 @@ with st.sidebar:
         type="primary"
     )
 
-    # Clear button
-    clear_button = st.button(
+    # Clear button with explicit on_click callback
+    st.button(
         "🗑️ Clear Text",
-        use_container_width=True
+        use_container_width=True,
+        on_click=on_clear_click
     )
 
     # Results placeholder
     results_placeholder = st.empty()
-    st.session_state.results_placeholder = results_placeholder
 
     # Bottom caption
     st.markdown("""
@@ -236,8 +242,6 @@ if "headline_input" not in st.session_state:
     st.session_state.headline_input = ""
 if "content_input" not in st.session_state:
     st.session_state.content_input = ""
-if "clear_pressed" not in st.session_state:
-    st.session_state.clear_pressed = False
 
 # Callback to handle auto-populating inputs when dropdown choice changes
 def on_sample_change():
@@ -275,19 +279,6 @@ content = st.text_area(
     key="content_input"
 )
 
-# ---- CLEAR BUTTON LOGIC ----
-if clear_button:
-    # Clear the text areas using their keys
-    st.session_state.headline_input = ""
-    st.session_state.content_input = ""
-    
-    # Reset dropdown
-    st.session_state.sample_choice = "--- Select ---"
-    
-    # Clear results
-    results_placeholder.empty()
-    st.rerun()
-    
 # ---- PREDICTION LOGIC ----
 if predict_button:
     if not OPENAI_API_KEY:
@@ -295,13 +286,12 @@ if predict_button:
         st.info("Go to your app settings → Secrets → Add `OPENAI_API_KEY`")
         st.stop()
     
-    if not headline.strip() and not content.strip():
+    if not headline.strip() or not content.strip():
         st.warning("⚠️ Please enter both a headline and content.")
         st.stop()
 
     # Results
     with st.spinner("🤔 Analyzing article..."):
-        # Add a small delay to show the spinner (remove this in production)
         time.sleep(1.5)  # Simulate processing time
         
         try:
