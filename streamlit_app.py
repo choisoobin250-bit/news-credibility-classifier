@@ -7,6 +7,7 @@ import requests
 import streamlit as st
 from joblib import load
 import os
+import time
 
 # Getting API Key
 OPENAI_API_KEY = st.secrets.get("OPENAI_API_KEY", "")
@@ -274,19 +275,22 @@ if clear_button:
     results_placeholder.empty()
     st.rerun()
 
-# ---- PREDICT BUTTON LOGIC ----
+# ---- PREDICTION LOGIC ----
 if predict_button:
     if not OPENAI_API_KEY:
         st.error("❌ OpenAI API Key not found! Please add it to Streamlit Secrets.")
         st.info("Go to your app settings → Secrets → Add `OPENAI_API_KEY`")
         st.stop()
     
-    if not headline.strip() or not content.strip():
+    if not headline.strip() and not content.strip():
         st.warning("⚠️ Please enter both a headline and content.")
         st.stop()
 
     # Results
-    with st.spinner("Analyzing article..."):
+    with st.spinner("🤔 Analyzing article..."):
+        # Add a small delay to show the spinner (remove this in production)
+        time.sleep(1.5)  # Simulate processing time
+        
         try:
             result = predict_article(headline, content, OPENAI_API_KEY, model)
             
@@ -296,8 +300,10 @@ if predict_button:
                 label = result["label"]
                 confidence = result["confidence"]
                 
+                # Clear previous results
                 results_placeholder.empty()
                 
+                # Display new results
                 with results_placeholder.container():
                     if label == "Credible":
                         st.markdown(f"""
