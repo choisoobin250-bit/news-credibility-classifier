@@ -296,7 +296,7 @@ if predict_button:
     try:
         # Show analysis status inside the sidebar results box
         with results_placeholder.container():
-            st.info("🤔 Analyzing article...")
+            st.info("Analyzing article...")
         
         # Artificial delay for visual feedback (optional)
         time.sleep(1.5)
@@ -317,14 +317,14 @@ if predict_button:
             with results_placeholder.container():
                 if label == "Credible":
                     st.markdown(f"""
-                    <div style="background-color: #ccffcc; padding: 15px; border-radius: 10px; border: 2px solid #2c2d2d; text-align: center;">
+                    <div style="background-color: #006400; padding: 15px; border-radius: 10px; border: 2px solid #2c2d2d; text-align: center;">
                         <h2 style="color: #306844; margin: 0; font-size: 20px;">✅ {label}</h2>
                         <p style="color: #306844; margin-top: 8px; font-size: 16px;">Confidence: {confidence:.2f}%</p>
                     </div>
                     """, unsafe_allow_html=True)
                 else:
                     st.markdown(f"""
-                    <div style="background-color: #EE4B2B; padding: 15px; border-radius: 10px; border: 2px solid #2c2d2d; text-align: center;">
+                    <div style="background-color: #8B0000; padding: 15px; border-radius: 10px; border: 2px solid #2c2d2d; text-align: center;">
                         <h2 style="color: #ffffff; margin: 0; font-size: 20px;">❌ {label}</h2>
                         <p style="color: #ffffff; margin-top: 8px; font-size: 16px;">Confidence: {confidence:.2f}%</p>
                     </div>
