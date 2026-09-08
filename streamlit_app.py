@@ -204,6 +204,9 @@ st.markdown("""
         <b>2.</b> Type the <b>Content</b> in the second box below.<br>
         <b>3.</b> Click <b>"🔍 Predict Credibility"</b> to see the results in the sidebar.
     </p>
+      <p style="color: #666666; margin: 10px 0 0 0; font-size: 13px;">
+        💡 <i>Try the dropdown below to try sample articles!</i>
+    </p>
 </div>
 """, unsafe_allow_html=True)
 
