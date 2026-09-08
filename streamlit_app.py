@@ -21,16 +21,16 @@ FINAL_MODEL = "news_credibility_classifier.joblib"
 # Cleans text
 def clean_text(text: str) -> str:
     if not isinstance(text, str):
-        return "" # If text is not a string, return empty
-    text = text.lower() # converts to lowercase
-    text = re.sub(r'[^\w\s]', '', text) # removes punctuation
-    text = re.sub(r'\s+', ' ', text).strip() # fixes spacing
+        return ""  # If text is not a string, return empty
+    text = text.lower()  # converts to lowercase
+    text = re.sub(r'[^\w\s]', '', text)  # removes punctuation
+    text = re.sub(r'\s+', ' ', text).strip()  # fixes spacing
     return text
 
 # Getting text embeddings
 def get_text_embeddings(text: str, api_key: str) -> list[float]:
-    if not text or not text.strip(): # checks if text (input) is empty before calling API
-        return [0.0] * EMBEDDING_DIMENSIONS # if text is empty, it returns float of zeros
+    if not text or not text.strip():  # checks if text (input) is empty before calling API
+        return [0.0] * EMBEDDING_DIMENSIONS  # if text is empty, it returns float of zeros
 
     headers = {
         "Content-Type": "application/json",
@@ -82,7 +82,7 @@ def predict_article(headline: str, content: str, api_key: str, model) -> dict:
 
     # Combine embeddings
     combined_embedding = np.concatenate((headline_embedding, content_embedding))
-    input_dimensions = combined_embedding.reshape(1, -1) # Reshape to 2D array with 1 row
+    input_dimensions = combined_embedding.reshape(1, -1)  # Reshape to 2D array with 1 row
 
     # Predict
     prediction = model.predict(input_dimensions)
@@ -179,23 +179,16 @@ with st.sidebar:
         type="primary"
     )
 
-def clear_text():
-    st.session_state.headline = ""
-    st.session_state.content = ""
-    st.session_state.clear_pressed = True
-    st.session_state.sample_choice = "--- Select ---"
-    if 'results_placeholder' in st.session_state:
-        st.session_state.results_placeholder.empty()
-
+    # Clear button
     clear_button = st.button(
         "🗑️ Clear Text",
-        use_container_width=True,
-        on_click=clear_text  # ← This handles the clearing
-)
+        use_container_width=True
+    )
 
-    # Results
+    # Results placeholder
     results_placeholder = st.empty()
-    
+    st.session_state.results_placeholder = results_placeholder
+
     # Bottom caption
     st.markdown("""
     <div class="bottom-caption">
@@ -213,7 +206,7 @@ st.markdown("""
         <b>2.</b> Type the <b>Content</b> in the second box below.<br>
         <b>3.</b> Click <b>"🔍 Predict Credibility"</b> to see the results in the sidebar.
     </p>
-      <p style="color: #666666; margin: 10px 0 0 0; font-size: 13px;">
+    <p style="color: #666666; margin: 10px 0 0 0; font-size: 13px;">
         💡 <i>Try the dropdown below to try sample articles!</i>
     </p>
 </div>
@@ -237,6 +230,14 @@ div[data-testid="stSelectbox"] label {
 }
 </style>
 """, unsafe_allow_html=True)
+
+# Initialize session state for input fields
+if "headline_input" not in st.session_state:
+    st.session_state.headline_input = ""
+if "content_input" not in st.session_state:
+    st.session_state.content_input = ""
+if "clear_pressed" not in st.session_state:
+    st.session_state.clear_pressed = False
 
 # Callback to handle auto-populating inputs when dropdown choice changes
 def on_sample_change():
@@ -276,9 +277,9 @@ content = st.text_area(
 
 # ---- CLEAR BUTTON LOGIC ----
 if clear_button:
-    st.session_state.headline = ""  # ← Clear the headline variable
-    st.session_state.content = ""   # ← Clear the content variable
-    st.session_state.sample_choice = "--- Select ---"  # ← Reset dropdown
+    st.session_state.headline_input = ""
+    st.session_state.content_input = ""
+    st.session_state.sample_choice = "--- Select ---"
     st.session_state.clear_pressed = True
     results_placeholder.empty()
     st.rerun()
