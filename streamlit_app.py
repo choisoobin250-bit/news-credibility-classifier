@@ -20,7 +20,7 @@ FINAL_MODEL = "news_credibility_classifier.joblib"
 # Cleans text
 def clean_text(text: str) -> str:
     if not isinstance(text, str):
-        return "" # If text is is not a string, return empty
+        return "" # If text is not a string, return empty
     text = text.lower() # converts to lowercase
     text = re.sub(r'[^\w\s]', '', text) # removes punctuation
     text = re.sub(r'\s+', ' ', text).strip() # fixes spacing
@@ -183,10 +183,9 @@ with st.sidebar:
         "🗑️ Clear Text",
         use_container_width=True
     )
-    
+
     # Results
     results_placeholder = st.empty()
-    st.session_state.results_placeholder = results_placeholder
     
     # Bottom caption
     st.markdown("""
@@ -227,72 +226,58 @@ div[data-testid="stSelectbox"] label {
 </style>
 """, unsafe_allow_html=True)
 
+# Callback to handle auto-populating inputs when dropdown choice changes
+def on_sample_change():
+    selected = st.session_state.sample_choice
+    if selected == "✅ Credible":
+        st.session_state.headline_input = sample_articles["credible"]["headline"]
+        st.session_state.content_input = sample_articles["credible"]["content"]
+    elif selected == "❌ Not Credible":
+        st.session_state.headline_input = sample_articles["not credible"]["headline"]
+        st.session_state.content_input = sample_articles["not credible"]["content"]
+    elif selected == "--- Select ---":
+        st.session_state.headline_input = ""
+        st.session_state.content_input = ""
+
 # Sample dropdown
-sample_choice = st.selectbox(
+st.selectbox(
     "📌 Try a Sample Article",
     ["--- Select ---", "✅ Credible", "❌ Not Credible"],
-    key="sample_choice"
+    key="sample_choice",
+    on_change=on_sample_change
 )
 
-# ---- AUTO-LOAD LOGIC (FIXED) ----
-# Initialize session state for headline and content if not exists
-if "headline" not in st.session_state:
-    st.session_state.headline = ""
-if "content" not in st.session_state:
-    st.session_state.content = ""
-if "clear_pressed" not in st.session_state:
-    st.session_state.clear_pressed = False
-
-# Auto-load selection
-if sample_choice == "✅ Credible":
-    st.session_state.headline = sample_articles["credible"]["headline"]
-    st.session_state.content = sample_articles["credible"]["content"]
-    st.session_state.clear_pressed = False
-elif sample_choice == "❌ Not Credible":
-    st.session_state.headline = sample_articles["not credible"]["headline"]
-    st.session_state.content = sample_articles["not credible"]["content"]
-    st.session_state.clear_pressed = False
-elif sample_choice == "--- Select ---":
-    if not st.session_state.clear_pressed:
-        st.session_state.headline = ""
-        st.session_state.content = ""
-
-# Inputs
-# Headline
+# Inputs tied directly to Streamlit session state keys
 headline = st.text_area(
     "**Headline**",
-    value=st.session_state.get("headline", ""),
     placeholder="Enter article headline...",
     height=80,
     key="headline_input"
 )
 
-# Content
 content = st.text_area(
     "**Content**",
-    value=st.session_state.get("content", ""),
     placeholder="Enter article content...",
     height=250,
     key="content_input"
 )
 
-# CLEAR BUTTON
+# ---- CLEAR BUTTON LOGIC ----
 if clear_button:
-    st.session_state.headline = ""
-    st.session_state.content = ""
-    st.session_state.clear_pressed = True
+    st.session_state.headline_input = ""
+    st.session_state.content_input = ""
     st.session_state.sample_choice = "--- Select ---"
     results_placeholder.empty()
     st.rerun()
 
-# PREDICT BUTTON
+# ---- PREDICT BUTTON LOGIC ----
 if predict_button:
     if not OPENAI_API_KEY:
         st.error("❌ OpenAI API Key not found! Please add it to Streamlit Secrets.")
         st.info("Go to your app settings → Secrets → Add `OPENAI_API_KEY`")
         st.stop()
     
-    if not headline.strip() and not content.strip():
+    if not headline.strip() or not content.strip():
         st.warning("⚠️ Please enter both a headline and content.")
         st.stop()
 
@@ -332,6 +317,6 @@ if predict_button:
 st.divider()
 st.markdown("""
 <p style="text-align: center; color: #666666; font-size: 12px;">
-         The News Credibility Classifier can make errors. Always double-check with your own careful reading and judgment.
+    The News Credibility Classifier can make errors. Always double-check with your own careful reading and judgment.
 </p>
 """, unsafe_allow_html=True)
