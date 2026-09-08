@@ -277,13 +277,17 @@ content = st.text_area(
 
 # ---- CLEAR BUTTON LOGIC ----
 if clear_button:
+    # Clear the text areas using their keys
     st.session_state.headline_input = ""
     st.session_state.content_input = ""
+    
+    # Reset dropdown
     st.session_state.sample_choice = "--- Select ---"
-    st.session_state.clear_pressed = True
+    
+    # Clear results
     results_placeholder.empty()
     st.rerun()
-
+    
 # ---- PREDICTION LOGIC ----
 if predict_button:
     if not OPENAI_API_KEY:
