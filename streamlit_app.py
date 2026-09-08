@@ -187,18 +187,11 @@ def clear_text():
     if 'results_placeholder' in st.session_state:
         st.session_state.results_placeholder.empty()
 
-# Then use it in the button
-clear_button = st.button(
-    "🗑️ Clear Text",
-    use_container_width=True,
-    on_click=clear_text  # ← This handles the clearing
-)
-    
-    # Clear button
     clear_button = st.button(
         "🗑️ Clear Text",
-        use_container_width=True
-    )
+        use_container_width=True,
+        on_click=clear_text  # ← This handles the clearing
+)
 
     # Results
     results_placeholder = st.empty()
