@@ -286,45 +286,53 @@ if predict_button:
         st.info("Go to your app settings → Secrets → Add `OPENAI_API_KEY`")
         st.stop()
     
-    if not headline.strip() or not content.strip():
+    if not headline.strip() and not content.strip():
         st.warning("⚠️ Please enter both a headline and content.")
         st.stop()
 
-    # Results
-    with st.spinner("🤔 Analyzing article..."):
-        time.sleep(1.5)  # Simulate processing time
+    # Clear previous results first
+    results_placeholder.empty()
+
+    try:
+        # Show analysis status inside the sidebar results box
+        with results_placeholder.container():
+            st.info("🤔 Analyzing article...")
         
-        try:
-            result = predict_article(headline, content, OPENAI_API_KEY, model)
+        # Artificial delay for visual feedback (optional)
+        time.sleep(1.5)
+        
+        # Run prediction model
+        result = predict_article(headline, content, OPENAI_API_KEY, model)
+        
+        # Clear the "Analyzing article..." message before displaying result
+        results_placeholder.empty()
+
+        if "error" in result:
+            st.error(f"⚠️ Error: {result['error']}")
+        else:
+            label = result["label"]
+            confidence = result["confidence"]
             
-            if "error" in result:
-                st.error(f"⚠️ Error: {result['error']}")
-            else:
-                label = result["label"]
-                confidence = result["confidence"]
+            # Display final credibility result inside sidebar
+            with results_placeholder.container():
+                if label == "Credible":
+                    st.markdown(f"""
+                    <div style="background-color: #ccffcc; padding: 15px; border-radius: 10px; border: 2px solid #2c2d2d; text-align: center;">
+                        <h2 style="color: #306844; margin: 0; font-size: 20px;">✅ {label}</h2>
+                        <p style="color: #306844; margin-top: 8px; font-size: 16px;">Confidence: {confidence:.2f}%</p>
+                    </div>
+                    """, unsafe_allow_html=True)
+                else:
+                    st.markdown(f"""
+                    <div style="background-color: #EE4B2B; padding: 15px; border-radius: 10px; border: 2px solid #2c2d2d; text-align: center;">
+                        <h2 style="color: #ffffff; margin: 0; font-size: 20px;">❌ {label}</h2>
+                        <p style="color: #ffffff; margin-top: 8px; font-size: 16px;">Confidence: {confidence:.2f}%</p>
+                    </div>
+                    """, unsafe_allow_html=True)
                 
-                # Clear previous results
-                results_placeholder.empty()
-                
-                # Display new results
-                with results_placeholder.container():
-                    if label == "Credible":
-                        st.markdown(f"""
-                        <div style="background-color: #ccffcc; padding: 15px; border-radius: 10px; border: 2px solid #2c2d2d; text-align: center;">
-                            <h2 style="color: #306844; margin: 0; font-size: 20px;">✅ {label}</h2>
-                            <p style="color: #306844; margin-top: 8px; font-size: 16px;">Confidence: {confidence:.2f}%</p>
-                        </div>
-                        """, unsafe_allow_html=True)
-                    else:
-                        st.markdown(f"""
-                        <div style="background-color: #EE4B2B; padding: 15px; border-radius: 10px; border: 2px solid #2c2d2d; text-align: center;">
-                            <h2 style="color: #ffffff; margin: 0; font-size: 20px;">❌ {label}</h2>
-                            <p style="color: #ffffff; margin-top: 8px; font-size: 16px;">Confidence: {confidence:.2f}%</p>
-                        </div>
-                        """, unsafe_allow_html=True)
-                    
-        except Exception as e:
-            st.error(f"❌ Error during prediction: {e}")
+    except Exception as e:
+        results_placeholder.empty()
+        st.error(f"❌ Error during prediction: {e}")
 
 # ---- FOOTER ----
 st.divider()
