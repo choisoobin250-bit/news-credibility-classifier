@@ -89,15 +89,48 @@ def predict_article(headline: str, content: str, api_key: str, model) -> dict:
 
     label = "Credible" if prediction[0] == 1 else "Not Credible"
     confidence = probability[0][prediction[0]] * 100
-    # prediction gets you the prediction results at a certain article position #prediction[2][1] 3rd articles prediction is "credible"
-    # probability gets you the score for both "credible" and "not credible"
-    # confidence gets the higher score and converts it into a percentage (* 100)
 
     return {
         "label": label,
         "confidence": confidence,
         "prediction": int(prediction[0])
     }
+
+# ---- LOAD THE MODEL ----
+model = load_model()
+
+if model is None:
+    st.stop()
+
+# ---- SAMPLE ARTICLES ----
+sample_articles = {
+    "credible": {
+        "headline": "Tropical Depression Luis maintains strength; Dolphin weakens into typhoon outside PAR",
+        "content": """MANILA, Philippines – Tropical Depression Luis maintained its strength on Sunday morning, August 2, while Dolphin, the tropical cyclone outside the Philippine Area of Responsibility (PAR), was downgraded from a super typhoon to a typhoon.
+
+The Philippine Atmospheric, Geophysical, and Astronomical Services Administration (PAGASA) said in its 11 am bulletin on Sunday that Luis still has maximum sustained winds of 55 kilometers per hour and gustiness of up to 70 km/h.
+
+As of 10 am, the tropical depression was located 400 kilometers east of Infanta, Quezon. It slightly accelerated, heading northwest at 15 km/h after moving at less than 10 km/h.
+
+Luis remains likely to stay over the Philippine Sea, but if its forecast track shifts westward, it could make landfall in Northern Luzon or Central Luzon, or go near these areas.
+
+Luis might also strengthen into a tropical storm on Sunday, but it may weaken back into a tropical depression on Monday, August 3, and into a remnant low by Wednesday, August 5."""
+    },
+    "not credible": {
+        "headline": "BOMBA! VP SARA NAGPALIT NG PASAPORTE, PLANO DAW TUMALON SA IBANG BANSA—EXCLUSIVE SOURCE",
+        "content": """MAKATI CITY—Isang nakakagulat na balita ang sumambulat sa social media ngayong gabi matapos kumalat ang ulat na si Vice President Sara Duterte-Carpio ay diumano'y nagpalit ng kanyang pasaporte at nagpaplano nang lumipad patungo sa isang hindi pa tukoy na bansa sa susunod na linggo.
+
+Ayon sa isang "highly placed insider" na malapit sa kampo ng Bise Presidente, ang naturang hakbang ay ginawa umano matapos ang hindi pagkakaunawaan nito kay Pangulong Bongbong Marcos Jr. sa isang closed-door meeting sa Malacañang noong nakaraang Huwebes.
+
+"Totoong-totoo po iyan. May kopya pa nga kami ng bagong passport ni Madam. As in blue ang cover, may tatak ng DFA," sabi ng source na tumangging makilala dahil sa takot na mawalan ng trabaho.
+
+Hindi pa rin mabatid kung saang bansa patungo si VP Sara, pero ayon sa ilang netizens na nag-viral na post, ang Switzerland daw o kaya Canada ang kanyang destinasyon dahil may "malaking bank account" umano ang pamilya Duterte doon.
+
+Samantala, mariing kinondena ng ilang militanteng grupo ang diumano'y pagtakas ni VP Sara, at tinawag itong "pagkakanulo sa mamamayang Pilipino." Wala namang opisyal na pahayag mula sa opisina ng Bise Presidente patungkol sa isyung ito, pero patuloy ang pagkalat ng balita sa Facebook at TikTok na mahigit 50,000 shares sa loob lamang ng dalawang oras.
+
+Sinabi rin ng isang "security expert" na si "Mr. X" (ayaw magbigay ng buong pangalan), na posibleng ginagamit ng mga nasa paligid ni VP Sara ang "backdoor route" sa NAIA upang maiwasan ang media coverage."""
+    }
+}
 
 # NEWS CREDIBILITY CLASSIFIER INTERFACE
 # Sidebar
@@ -175,42 +208,12 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# SAMPLE ARTICLES
-sample_articles = {
-    "credible": {
-        "headline": "Tropical Depression Luis maintains strength; Dolphin weakens into typhoon outside PAR",
-        "content": """MANILA, Philippines – Tropical Depression Luis maintained its strength on Sunday morning, August 2, while Dolphin, the tropical cyclone outside the Philippine Area of Responsibility (PAR), was downgraded from a super typhoon to a typhoon.
-
-The Philippine Atmospheric, Geophysical, and Astronomical Services Administration (PAGASA) said in its 11 am bulletin on Sunday that Luis still has maximum sustained winds of 55 kilometers per hour and gustiness of up to 70 km/h.
-
-As of 10 am, the tropical depression was located 400 kilometers east of Infanta, Quezon. It slightly accelerated, heading northwest at 15 km/h after moving at less than 10 km/h.
-
-Luis remains likely to stay over the Philippine Sea, but if its forecast track shifts westward, it could make landfall in Northern Luzon or Central Luzon, or go near these areas.
-
-Luis might also strengthen into a tropical storm on Sunday, but it may weaken back into a tropical depression on Monday, August 3, and into a remnant low by Wednesday, August 5."""
-    },
-    "not credible": {
-        "headline": "BOMBA! VP SARA NAGPALIT NG PASAPORTE, PLANO DAW TUMALON SA IBANG BANSA—EXCLUSIVE SOURCE",
-        "content": """MAKATI CITY—Isang nakakagulat na balita ang sumambulat sa social media ngayong gabi matapos kumalat ang ulat na si Vice President Sara Duterte-Carpio ay diumano'y nagpalit ng kanyang pasaporte at nagpaplano nang lumipad patungo sa isang hindi pa tukoy na bansa sa susunod na linggo.
-
-Ayon sa isang "highly placed insider" na malapit sa kampo ng Bise Presidente, ang naturang hakbang ay ginawa umano matapos ang hindi pagkakaunawaan nito kay Pangulong Bongbong Marcos Jr. sa isang closed-door meeting sa Malacañang noong nakaraang Huwebes.
-
-"Totoong-totoo po iyan. May kopya pa nga kami ng bagong passport ni Madam. As in blue ang cover, may tatak ng DFA," sabi ng source na tumangging makilala dahil sa takot na mawalan ng trabaho.
-
-Hindi pa rin mabatid kung saang bansa patungo si VP Sara, pero ayon sa ilang netizens na nag-viral na post, ang Switzerland daw o kaya Canada ang kanyang destinasyon dahil may "malaking bank account" umano ang pamilya Duterte doon.
-
-Samantala, mariing kinondena ng ilang militanteng grupo ang diumano'y pagtakas ni VP Sara, at tinawag itong "pagkakanulo sa mamamayang Pilipino." Wala namang opisyal na pahayag mula sa opisina ng Bise Presidente patungkol sa isyung ito, pero patuloy ang pagkalat ng balita sa Facebook at TikTok na mahigit 50,000 shares sa loob lamang ng dalawang oras.
-
-Sinabi rin ng isang "security expert" na si "Mr. X" (ayaw magbigay ng buong pangalan), na posibleng ginagamit ng mga nasa paligid ni VP Sara ang "backdoor route" sa NAIA upang maiwasan ang media coverage."""
-    }
-}
-
 # Sample articles (style)
 st.markdown("""
 <style>
-/* Style the selectbox container to look like a gray box */
+/* Style the selectbox container */
 div[data-testid="stSelectbox"] {
-    background-color: #ffffff;
+    background-color: #f0f0f0;
     padding: 15px 15px 5px 15px;
     border-radius: 8px;
     border: 1px solid #d0d0d0;
@@ -231,17 +234,28 @@ sample_choice = st.selectbox(
     key="sample_choice"
 )
 
+# ---- AUTO-LOAD LOGIC (FIXED) ----
+# Initialize session state for headline and content if not exists
+if "headline" not in st.session_state:
+    st.session_state.headline = ""
+if "content" not in st.session_state:
+    st.session_state.content = ""
+if "clear_pressed" not in st.session_state:
+    st.session_state.clear_pressed = False
+
 # Auto-load selection
 if sample_choice == "✅ Credible":
-    st.session_state["headline"] = sample_articles["credible"]["headline"]
-    st.session_state["content"] = sample_articles["credible"]["content"]
+    st.session_state.headline = sample_articles["credible"]["headline"]
+    st.session_state.content = sample_articles["credible"]["content"]
+    st.session_state.clear_pressed = False
 elif sample_choice == "❌ Not Credible":
-    st.session_state["headline"] = sample_articles["not credible"]["headline"]
-    st.session_state["content"] = sample_articles["not credible"]["content"]
+    st.session_state.headline = sample_articles["not credible"]["headline"]
+    st.session_state.content = sample_articles["not credible"]["content"]
+    st.session_state.clear_pressed = False
 elif sample_choice == "--- Select ---":
-    if not st.session_state.get("clear_pressed", False):
-        st.session_state["headline"] = ""
-        st.session_state["content"] = ""
+    if not st.session_state.clear_pressed:
+        st.session_state.headline = ""
+        st.session_state.content = ""
 
 # Inputs
 # Headline
@@ -253,7 +267,7 @@ headline = st.text_area(
     key="headline_input"
 )
 
-#Content
+# Content
 content = st.text_area(
     "**Content**",
     value=st.session_state.get("content", ""),
@@ -262,16 +276,16 @@ content = st.text_area(
     key="content_input"
 )
 
-# Clear button
+# CLEAR BUTTON
 if clear_button:
-    st.session_state["headline"] = ""
-    st.session_state["content"] = ""
+    st.session_state.headline = ""
+    st.session_state.content = ""
     st.session_state.clear_pressed = True
     st.session_state.sample_choice = "--- Select ---"
     results_placeholder.empty()
     st.rerun()
 
-# Predict button
+# PREDICT BUTTON
 if predict_button:
     if not OPENAI_API_KEY:
         st.error("❌ OpenAI API Key not found! Please add it to Streamlit Secrets.")
