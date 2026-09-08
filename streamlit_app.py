@@ -196,19 +196,7 @@ with st.sidebar:
 
 # Main Area
 # Instructions
-st.markdown("""
-<div style="background-color: #ffffff; padding: 20px; border-radius: 10px; border: 1px solid #d0d0d0; margin-bottom: 15px;">
-    <h2 style="color:#000000; margin: 0 0 8px 0; font-size: 18px; font-weight: 600;">✍🏻 Enter your news article!</h2>
-    <p style="color: #333333; margin: 0; font-size: 14px; line-height: 2.0;">
-        <b>1.</b> Type the <b>Headline</b> in the first box below.<br>
-        <b>2.</b> Type the <b>Content</b> in the second box below.<br>
-        <b>3.</b> Click <b>"🔍 Predict Credibility"</b> to see the results in the sidebar.
-    </p>
-      <p style="color: #666666; margin: 10px 0 0 0; font-size: 13px;">
-        💡 <i>Try the dropdown below to try sample articles!</i>
-    </p>
-</div>
-""", unsafe_allow_html=True)
+
 
 # Sample articles (style)
 st.markdown("""
