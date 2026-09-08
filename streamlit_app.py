@@ -179,6 +179,21 @@ with st.sidebar:
         type="primary"
     )
 
+def clear_text():
+    st.session_state.headline = ""
+    st.session_state.content = ""
+    st.session_state.clear_pressed = True
+    st.session_state.sample_choice = "--- Select ---"
+    if 'results_placeholder' in st.session_state:
+        st.session_state.results_placeholder.empty()
+
+# Then use it in the button
+clear_button = st.button(
+    "🗑️ Clear Text",
+    use_container_width=True,
+    on_click=clear_text  # ← This handles the clearing
+)
+    
     # Clear button
     clear_button = st.button(
         "🗑️ Clear Text",
