@@ -1,4 +1,4 @@
-# NEWS CREDIBILITY CLASSIFIER - Streamlit Version
+# NEWS CREDIBILITY CLASSIFIER
 
 import re
 import numpy as np
@@ -8,28 +8,28 @@ import streamlit as st
 from joblib import load
 import os
 
-# Getting API Key from Streamlit Secrets
+# Getting API Key
 OPENAI_API_KEY = st.secrets.get("OPENAI_API_KEY", "")
 
 OPENAI_API_URL = "https://api.openai.com/v1/embeddings"
 EMBEDDING_MODEL = "text-embedding-3-large"
 EMBEDDING_DIMENSIONS = 3072
-MODEL_PATH = "news_credibility_classifier.joblib"
+FINAL_MODEL = "news_credibility_classifier.joblib"
 
-# FUNCTIONS
+# Functions
+# Cleans text
 def clean_text(text: str) -> str:
-    """Clean and preprocess text"""
     if not isinstance(text, str):
-        return ""
-    text = text.lower()
-    text = re.sub(r'[^\w\s]', '', text)
-    text = re.sub(r'\s+', ' ', text).strip()
+        return "" # If text is is not a string, return empty
+    text = text.lower() # converts to lowercase
+    text = re.sub(r'[^\w\s]', '', text) # removes punctuation
+    text = re.sub(r'\s+', ' ', text).strip() # fixes spacing
     return text
 
+# Getting text embeddings
 def get_text_embeddings(text: str, api_key: str) -> list[float]:
-    """Get embeddings from OpenAI API"""
-    if not text or not text.strip():
-        return [0.0] * EMBEDDING_DIMENSIONS
+    if not text or not text.strip(): # checks if text (input) is empty before calling API
+        return [0.0] * EMBEDDING_DIMENSIONS # if text is empty, it returns float of zeros
 
     headers = {
         "Content-Type": "application/json",
@@ -53,21 +53,21 @@ def get_text_embeddings(text: str, api_key: str) -> list[float]:
         st.error(f"Request Failed: {e}")
         return [0.0] * EMBEDDING_DIMENSIONS
 
+# Loading the model
 @st.cache_resource
 def load_model():
-    """Load the trained model with caching"""
     try:
-        model = load(MODEL_PATH)
+        model = load(FINAL_MODEL)
         return model
     except FileNotFoundError:
-        st.error(f"❌ Model file '{MODEL_PATH}' not found!")
+        st.error(f"Error: Model file '{FINAL_MODEL}' not found!")
         return None
     except Exception as e:
-        st.error(f"❌ Error loading model: {e}")
+        st.error(f"Error loading model: {e}")
         return None
 
+# Predicting unseen articles
 def predict_article(headline: str, content: str, api_key: str, model) -> dict:
-    """Predict article credibility"""
     if headline.strip() == "" or content.strip() == "":
         return {"error": "Headline and content cannot be empty"}
 
@@ -81,7 +81,7 @@ def predict_article(headline: str, content: str, api_key: str, model) -> dict:
 
     # Combine embeddings
     combined_embedding = np.concatenate((headline_embedding, content_embedding))
-    input_dimensions = combined_embedding.reshape(1, -1)
+    input_dimensions = combined_embedding.reshape(1, -1) # Reshape to 2D array with 1 row
 
     # Predict
     prediction = model.predict(input_dimensions)
@@ -89,6 +89,9 @@ def predict_article(headline: str, content: str, api_key: str, model) -> dict:
 
     label = "Credible" if prediction[0] == 1 else "Not Credible"
     confidence = probability[0][prediction[0]] * 100
+    # prediction gets you the prediction results at a certain article position #prediction[2][1] 3rd articles prediction is "credible"
+    # probability gets you the score for both "credible" and "not credible"
+    # confidence gets the higher score and converts it into a percentage (* 100)
 
     return {
         "label": label,
@@ -126,21 +129,8 @@ Sinabi rin ng isang "security expert" na si "Mr. X" (ayaw magbigay ng buong pang
     }
 }
 
-# USER INTERFACE
-# TITLE
-st.set_page_config(
-    page_title="News Credibility Classifier",
-    page_icon="📰",
-    layout="wide"
-)
-
-# ---- LOAD MODEL ----
-model = load_model()
-
-if model is None:
-    st.stop()
-
-# ---- SIDEBAR ----
+# NEWS CREDIBILITY CLASSIFIER INTERFACE
+# Sidebar
 with st.sidebar:
     st.markdown("""
     <style>
@@ -154,20 +144,6 @@ with st.sidebar:
         background-color: #004d99 !important;
         border-color: #004d99 !important;
     }
-    /* Fix divider spacing */
-    hr {
-        margin-top: 8px !important;
-        margin-bottom: 8px !important;
-    }
-    /* Reduce button spacing */
-    .stButton {
-        margin-top: 2px !important;
-        margin-bottom: 2px !important;
-    }
-    /* Reduce vertical block spacing */
-    div[data-testid="stVerticalBlock"] > div {
-        gap: 4px !important;
-    }
     .bottom-caption {
         font-size: 13px;
         color: #888888;
@@ -179,7 +155,7 @@ with st.sidebar:
     </style>
     """, unsafe_allow_html=True)
 
-    # ---- TITLE IN SIDEBAR ----
+    # Title
     st.markdown("""
     <div style="text-align: center; margin-bottom: 15px;">
         <h1 style="color: black; margin: 0; font-size: 40px;">📰</h1>
@@ -191,34 +167,33 @@ with st.sidebar:
         </p>
     </div>
     """, unsafe_allow_html=True)
-    
+
+    # Predict button
     predict_button = st.button(
         "🔍 Predict Credibility",
         use_container_width=True,
         type="primary"
     )
-    
+
+    # Clear button
     clear_button = st.button(
         "🗑️ Clear Text",
         use_container_width=True
     )
     
-    # ---- CREATE A PLACEHOLDER FOR RESULTS IN SIDEBAR ----
+    # Results
     results_placeholder = st.empty()
     st.session_state.results_placeholder = results_placeholder
     
-    # Push caption to bottom
-    st.markdown("<div style='flex-grow: 1;'></div>", unsafe_allow_html=True)
-    
-    # Caption at bottom with smaller font
+    # Bottom caption
     st.markdown("""
     <div class="bottom-caption">
         The classifier can make errors. Always double-check with careful reading and judgment.
     </div>
     """, unsafe_allow_html=True)
 
-# ---- MAIN AREA ----
-# INSTRUCTIONS (Always visible, not a dropdown)
+# Main Area
+# Instructions
 st.markdown("""
 <div style="background-color: #ffffff; padding: 20px; border-radius: 10px; border: 1px solid #d0d0d0; margin-bottom: 15px;">
     <h2 style="color:#000000; margin: 0 0 8px 0; font-size: 18px; font-weight: 600;">✍🏻 Enter your news article!</h2>
@@ -230,7 +205,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# ---- SAMPLE ARTICLE DROPDOWN ----
+# Sample articles (style)
 st.markdown("""
 <style>
 /* Style the selectbox container to look like a gray box */
@@ -249,18 +224,14 @@ div[data-testid="stSelectbox"] label {
 </style>
 """, unsafe_allow_html=True)
 
-# Create the selectbox
+# Sample dropdown
 sample_choice = st.selectbox(
     "📌 Try a Sample Article",
     ["--- Select ---", "✅ Credible", "❌ Not Credible"],
     key="sample_choice"
 )
 
-# Initialize clear flag if not exists
-if "clear_pressed" not in st.session_state:
-    st.session_state.clear_pressed = False
-
-# ---- AUTO-LOAD LOGIC (Now AFTER the selectbox) ----
+# Auto-load selection
 if sample_choice == "✅ Credible":
     st.session_state["headline"] = sample_articles["credible"]["headline"]
     st.session_state["content"] = sample_articles["credible"]["content"]
@@ -272,7 +243,8 @@ elif sample_choice == "--- Select ---":
         st.session_state["headline"] = ""
         st.session_state["content"] = ""
 
-# ---- MAIN INPUT AREA ----
+# Inputs
+# Headline
 headline = st.text_area(
     "**Headline**",
     value=st.session_state.get("headline", ""),
@@ -281,6 +253,7 @@ headline = st.text_area(
     key="headline_input"
 )
 
+#Content
 content = st.text_area(
     "**Content**",
     value=st.session_state.get("content", ""),
@@ -289,7 +262,7 @@ content = st.text_area(
     key="content_input"
 )
 
-# ---- CLEAR BUTTON LOGIC ----
+# Clear button
 if clear_button:
     st.session_state["headline"] = ""
     st.session_state["content"] = ""
@@ -298,7 +271,7 @@ if clear_button:
     results_placeholder.empty()
     st.rerun()
 
-# ---- PREDICTION LOGIC ----
+# Predict button
 if predict_button:
     if not OPENAI_API_KEY:
         st.error("❌ OpenAI API Key not found! Please add it to Streamlit Secrets.")
@@ -308,7 +281,8 @@ if predict_button:
     if not headline.strip() and not content.strip():
         st.warning("⚠️ Please enter both a headline and content.")
         st.stop()
-    
+
+    # Results
     with st.spinner("Analyzing article..."):
         try:
             result = predict_article(headline, content, OPENAI_API_KEY, model)
