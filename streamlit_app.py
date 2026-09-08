@@ -267,9 +267,10 @@ content = st.text_area(
 
 # ---- CLEAR BUTTON LOGIC ----
 if clear_button:
-    st.session_state.headline_input = ""
-    st.session_state.content_input = ""
-    st.session_state.sample_choice = "--- Select ---"
+     st.session_state.headline = ""  # ← Clear the headline variable
+    st.session_state.content = ""   # ← Clear the content variable
+    st.session_state.sample_choice = "--- Select ---"  # ← Reset dropdown
+    st.session_state.clear_pressed = True
     results_placeholder.empty()
     st.rerun()
 
