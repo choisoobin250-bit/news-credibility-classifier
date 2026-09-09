@@ -213,10 +213,10 @@ with st.sidebar:
     # Results box in the sidebar
     results_placeholder = st.empty()
 
-    # Caption
+    # Sidebar Caption
     st.markdown("""
     <div class="bottom-caption">
-        The classifier can make errors. Always double-check with careful reading and judgment.
+        The News Credibility Classifier can make errors. Always double-check with your own careful reading and judgment.
     </div>
     """, unsafe_allow_html=True)
 
@@ -332,7 +332,7 @@ if predict_button:
         results_placeholder.empty()
         st.error(f"❌ Error during prediction: {e}")
 
-# Footer
+# Bottom Caption
 st.divider()
 st.markdown("""
 <p style="text-align: center; color: #666666; font-size: 12px;">
