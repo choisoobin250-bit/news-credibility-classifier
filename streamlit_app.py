@@ -21,16 +21,16 @@ FINAL_MODEL = "news_credibility_classifier.joblib"
 # Cleans text
 def clean_text(text: str) -> str:
     if not isinstance(text, str):
-        return ""  # If text is not a string, return empty
-    text = text.lower()  # converts to lowercase
-    text = re.sub(r'[^\w\s]', '', text)  # removes punctuation
-    text = re.sub(r'\s+', ' ', text).strip()  # fixes spacing
+        return ""
+    text = text.lower()
+    text = re.sub(r'[^\w\s]', '', text)
+    text = re.sub(r'\s+', ' ', text).strip()
     return text
 
 # Getting text embeddings
 def get_text_embeddings(text: str, api_key: str) -> list[float]:
-    if not text or not text.strip():  # checks if text (input) is empty before calling API
-        return [0.0] * EMBEDDING_DIMENSIONS  # if text is empty, it returns float of zeros
+    if not text or not text.strip():
+        return [0.0] * EMBEDDING_DIMENSIONS
 
     headers = {
         "Content-Type": "application/json",
@@ -54,7 +54,7 @@ def get_text_embeddings(text: str, api_key: str) -> list[float]:
         st.error(f"Request Failed: {e}")
         return [0.0] * EMBEDDING_DIMENSIONS
 
-# Loading the model
+# Load model
 @st.cache_resource
 def load_model():
     try:
@@ -72,19 +72,15 @@ def predict_article(headline: str, content: str, api_key: str, model) -> dict:
     if headline.strip() == "" or content.strip() == "":
         return {"error": "Headline and content cannot be empty"}
 
-    # Clean text
     cleaned_headline = clean_text(headline)
     cleaned_content = clean_text(content)
 
-    # Get embeddings
     headline_embedding = get_text_embeddings(cleaned_headline, api_key)
     content_embedding = get_text_embeddings(cleaned_content, api_key)
 
-    # Combine embeddings
     combined_embedding = np.concatenate((headline_embedding, content_embedding))
-    input_dimensions = combined_embedding.reshape(1, -1)  # Reshape to 2D array with 1 row
+    input_dimensions = combined_embedding.reshape(1, -1)
 
-    # Predict
     prediction = model.predict(input_dimensions)
     probability = model.predict_proba(input_dimensions)
 
@@ -97,13 +93,13 @@ def predict_article(headline: str, content: str, api_key: str, model) -> dict:
         "prediction": int(prediction[0])
     }
 
-# ---- LOAD THE MODEL ----
+# Running the model
 model = load_model()
 
 if model is None:
     st.stop()
 
-# ---- SAMPLE ARTICLES ----
+# Sample Articles
 sample_articles = {
     "credible": {
         "headline": "Tropical Depression Luis maintains strength; Dolphin weakens into typhoon outside PAR",
@@ -133,10 +129,32 @@ Sinabi rin ng isang "security expert" na si "Mr. X" (ayaw magbigay ng buong pang
     }
 }
 
-# Callback for clearing input fields cleanly
+# Automations
+# Clear button callback - clears all inputs and resets dropdown
 def on_clear_click():
     st.session_state.headline_input = ""
     st.session_state.content_input = ""
+    st.session_state.sample_choice = "--- Select ---"
+
+# Auto-load sample articles when dropdown changes
+def on_sample_change():
+    selected = st.session_state.sample_choice
+    if selected == "✅ Credible":
+        st.session_state.headline_input = sample_articles["credible"]["headline"]
+        st.session_state.content_input = sample_articles["credible"]["content"]
+    elif selected == "❌ Not Credible":
+        st.session_state.headline_input = sample_articles["not credible"]["headline"]
+        st.session_state.content_input = sample_articles["not credible"]["content"]
+    elif selected == "--- Select ---":
+        st.session_state.headline_input = ""
+        st.session_state.content_input = ""
+
+# User Inputs
+if "headline_input" not in st.session_state:
+    st.session_state.headline_input = ""
+if "content_input" not in st.session_state:
+    st.session_state.content_input = ""
+if "sample_choice" not in st.session_state:
     st.session_state.sample_choice = "--- Select ---"
 
 # NEWS CREDIBILITY CLASSIFIER INTERFACE
@@ -185,17 +203,17 @@ with st.sidebar:
         type="primary"
     )
 
-    # Clear button with explicit on_click callback
+    # Clear button (with callback)
     st.button(
         "🗑️ Clear Text",
         use_container_width=True,
         on_click=on_clear_click
     )
 
-    # Results placeholder
+    # Results box in the sidebar
     results_placeholder = st.empty()
 
-    # Bottom caption
+    # Caption
     st.markdown("""
     <div class="bottom-caption">
         The classifier can make errors. Always double-check with careful reading and judgment.
@@ -218,7 +236,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Sample articles (style)
+# Sample dropdown (style)
 st.markdown("""
 <style>
 /* Style the selectbox container */
@@ -237,26 +255,7 @@ div[data-testid="stSelectbox"] label {
 </style>
 """, unsafe_allow_html=True)
 
-# Initialize session state for input fields
-if "headline_input" not in st.session_state:
-    st.session_state.headline_input = ""
-if "content_input" not in st.session_state:
-    st.session_state.content_input = ""
-
-# Callback to handle auto-populating inputs when dropdown choice changes
-def on_sample_change():
-    selected = st.session_state.sample_choice
-    if selected == "✅ Credible":
-        st.session_state.headline_input = sample_articles["credible"]["headline"]
-        st.session_state.content_input = sample_articles["credible"]["content"]
-    elif selected == "❌ Not Credible":
-        st.session_state.headline_input = sample_articles["not credible"]["headline"]
-        st.session_state.content_input = sample_articles["not credible"]["content"]
-    elif selected == "--- Select ---":
-        st.session_state.headline_input = ""
-        st.session_state.content_input = ""
-
-# Sample dropdown
+# Sample dropdown (with auto-load function)
 st.selectbox(
     "📌 Try a Sample Article",
     ["--- Select ---", "✅ Credible", "❌ Not Credible"],
@@ -264,7 +263,7 @@ st.selectbox(
     on_change=on_sample_change
 )
 
-# Inputs tied directly to Streamlit session state keys
+# Inputs
 headline = st.text_area(
     "**Headline**",
     placeholder="Enter article headline...",
@@ -279,7 +278,7 @@ content = st.text_area(
     key="content_input"
 )
 
-# ---- PREDICTION LOGIC ----
+# Predicting results
 if predict_button:
     if not OPENAI_API_KEY:
         st.error("❌ OpenAI API Key not found! Please add it to Streamlit Secrets.")
@@ -294,11 +293,10 @@ if predict_button:
     results_placeholder.empty()
 
     try:
-        # Show analysis status inside the sidebar results box
+        # Show status (analyzing article...)
         with results_placeholder.container():
             st.info("Analyzing article...")
         
-        # Artificial delay for visual feedback (optional)
         time.sleep(1.5)
         
         # Run prediction model
@@ -334,7 +332,7 @@ if predict_button:
         results_placeholder.empty()
         st.error(f"❌ Error during prediction: {e}")
 
-# ---- FOOTER ----
+# Footer
 st.divider()
 st.markdown("""
 <p style="text-align: center; color: #666666; font-size: 12px;">
