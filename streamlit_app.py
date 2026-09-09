@@ -217,8 +217,7 @@ with st.sidebar:
     st.markdown("""
     <div class="sidebar-caption">
         The News Credibility Classifier can make errors.<br>
-        Always double-check with your own<br>
-        careful reading and judgment.
+        Always verify and double-check.
     </div>
     """, unsafe_allow_html=True)
 
