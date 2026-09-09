@@ -217,7 +217,7 @@ with st.sidebar:
     st.markdown("""
     <div class="sidebar-caption">
         The News Credibility Classifier can make errors.<br>
-        Always verify and double-check.
+        Always verify the facts.
     </div>
     """, unsafe_allow_html=True)
 
@@ -337,6 +337,6 @@ if predict_button:
 st.divider()
 st.markdown("""
 <p style="text-align: center; color: #666666; font-size: 12px;">
-    The News Credibility Classifier can make errors. Always double-check with your own careful reading and judgment.
+    This classifier is a supplementary tool and should not be used as a definitive source.
 </p>
 """, unsafe_allow_html=True)
