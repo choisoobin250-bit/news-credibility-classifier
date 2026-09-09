@@ -172,8 +172,8 @@ with st.sidebar:
         background-color: #004d99 !important;
         border-color: #004d99 !important;
     }
-    .bottom-caption {
-        font-size: 20px;
+    .sidebar-caption {
+        font-size: 12px;
         color: #888888;
         text-align: center;
         padding: 10px 0;
