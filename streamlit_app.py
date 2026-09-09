@@ -173,7 +173,7 @@ with st.sidebar:
         border-color: #004d99 !important;
     }
     .bottom-caption {
-        font-size: 13px;
+        font-size: 20px;
         color: #888888;
         text-align: center;
         padding: 10px 0;
