@@ -9,6 +9,7 @@ from joblib import load
 import os
 import time
 
+# Lock sidebar
 st.set_page_config(
     page_title="News Credibility Classifier",
     page_icon="📰",
