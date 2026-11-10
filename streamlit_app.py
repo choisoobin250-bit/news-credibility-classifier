@@ -9,6 +9,11 @@ from joblib import load
 import os
 import time
 
+st.set_page_config(
+    page_title="News Credibility Classifier",
+    page_icon="📰",
+    initial_sidebar_state="locked" 
+
 # Getting API Key
 OPENAI_API_KEY = st.secrets.get("OPENAI_API_KEY", "")
 
